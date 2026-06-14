@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AppLayout } from "../components/layout/AppLayout";
+import { ProtectedRoute } from "../components/layout/ProtectedRoute";
 import { LoginPage } from "../features/auth/LoginPage";
 import { RegisterPage } from "../features/auth/RegisterPage";
 import { AccountsPage } from "../features/accounts/AccountsPage";
@@ -22,27 +23,32 @@ export const router = createBrowserRouter([
     element: <RegisterPage />,
   },
   {
-    element: <AppLayout />,
+    element: <ProtectedRoute />,
     children: [
       {
-        path: "/dashboard",
-        element: <DashboardPage />,
-      },
-      {
-        path: "/accounts",
-        element: <AccountsPage />,
-      },
-      {
-        path: "/categories",
-        element: <CategoriesPage />,
-      },
-      {
-        path: "/transactions",
-        element: <TransactionsPage />,
-      },
-      {
-        path: "/reports/monthly-summary",
-        element: <MonthlySummaryPage />,
+        element: <AppLayout />,
+        children: [
+          {
+            path: "/dashboard",
+            element: <DashboardPage />,
+          },
+          {
+            path: "/accounts",
+            element: <AccountsPage />,
+          },
+          {
+            path: "/categories",
+            element: <CategoriesPage />,
+          },
+          {
+            path: "/transactions",
+            element: <TransactionsPage />,
+          },
+          {
+            path: "/reports/monthly-summary",
+            element: <MonthlySummaryPage />,
+          },
+        ],
       },
     ],
   },
