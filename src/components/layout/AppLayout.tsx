@@ -1,34 +1,21 @@
-import { Link, Outlet } from "react-router-dom";
-import { useAuth } from "../../features/auth/use-auth";
+import { Outlet } from "react-router-dom";
+import { Header } from "./Header";
+import { Sidebar } from "./Sidebar";
 
 export function AppLayout() {
-  const { user, logout } = useAuth();
-
   return (
-    <div>
-      <aside>
-        <h2>FinTrack</h2>
+    <div className="min-h-screen bg-slate-100 text-slate-950">
+      <div className="flex min-h-screen">
+        <Sidebar />
 
-        <nav>
-          <Link to="/dashboard">Dashboard</Link>
-          <Link to="/accounts">Accounts</Link>
-          <Link to="/categories">Categories</Link>
-          <Link to="/transactions">Transactions</Link>
-          <Link to="/reports/monthly-summary">Reports</Link>
-        </nav>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <Header />
 
-        <button type="button" onClick={logout}>
-          Logout
-        </button>
-      </aside>
-
-      <main>
-        <header>
-          <span>{user?.name}</span>
-        </header>
-
-        <Outlet />
-      </main>
+          <main className="flex-1 px-6 py-6">
+            <Outlet />
+          </main>
+        </div>
+      </div>
     </div>
   );
 }
