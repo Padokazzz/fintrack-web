@@ -1,3 +1,185 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import type { CategoryFormData } from "./category-schemas";
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+  updateCategory,
+} from "./categories-service";
+import { CategoryCard } from "./components/CategoryCard";
+import { CategoryForm } from "./components/CategoryForm";
+import type { Category } from "./types";
+
 export function CategoriesPage() {
-  return <h1>Categories</h1>;
+  const queryClient = useQueryClient();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+
+  const categoriesQuery = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
+
+  const createMutation = useMutation({
+    mutationFn: createCategory,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      setIsFormOpen(false);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: CategoryFormData }) =>
+      updateCategory(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      setEditingCategory(null);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteCategory,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+  });
+
+  function handleCreate(data: CategoryFormData) {
+    createMutation.mutate(data);
+  }
+
+  function handleUpdate(data: CategoryFormData) {
+    if (!editingCategory) {
+      return;
+    }
+
+    updateMutation.mutate({
+      id: editingCategory.id,
+      data,
+    });
+  }
+
+  function handleDelete(category: Category) {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${category.name}"?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    deleteMutation.mutate(category.id);
+  }
+
+  const categories = categoriesQuery.data ?? [];
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+        <div>
+          <h1 className="text-2xl font-semibold text-slate-950">Categories</h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Organize income and expenses for your transactions.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            setEditingCategory(null);
+            setIsFormOpen((current) => !current);
+          }}
+          className="inline-flex h-10 items-center gap-2 rounded-md bg-emerald-600 px-4 text-sm font-medium text-white transition hover:bg-emerald-700"
+        >
+          <Plus className="h-4 w-4" />
+          New category
+        </button>
+      </div>
+
+      {isFormOpen && (
+        <section className="rounded-lg border border-slate-200 bg-white p-5">
+          <h2 className="mb-4 text-base font-semibold text-slate-950">
+            Create category
+          </h2>
+
+          {createMutation.isError && (
+            <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+              Could not create category. Check the form data and try again.
+            </p>
+          )}
+
+          <CategoryForm
+            submitLabel="Create category"
+            isSubmitting={createMutation.isPending}
+            onSubmit={handleCreate}
+          />
+        </section>
+      )}
+
+      {editingCategory && (
+        <section className="rounded-lg border border-slate-200 bg-white p-5">
+          <h2 className="mb-4 text-base font-semibold text-slate-950">
+            Edit category
+          </h2>
+
+          {updateMutation.isError && (
+            <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+              Could not update category. Check the form data and try again.
+            </p>
+          )}
+
+          <CategoryForm
+            defaultValues={{
+              name: editingCategory.name,
+              type: editingCategory.type,
+            }}
+            submitLabel="Save changes"
+            isSubmitting={updateMutation.isPending}
+            onSubmit={handleUpdate}
+          />
+        </section>
+      )}
+
+      {categoriesQuery.isLoading && (
+        <p className="text-sm text-slate-500">Loading categories...</p>
+      )}
+
+      {categoriesQuery.isError && (
+        <section className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+          Could not load categories.
+        </section>
+      )}
+
+      {!categoriesQuery.isLoading &&
+        !categoriesQuery.isError &&
+        categories.length === 0 && (
+          <section className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
+            <h2 className="text-base font-semibold text-slate-950">
+              No categories yet
+            </h2>
+            <p className="mt-2 text-sm text-slate-500">
+              Create your first category to classify transactions.
+            </p>
+          </section>
+        )}
+
+      {categories.length > 0 && (
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {categories.map((category) => (
+            <CategoryCard
+              key={category.id}
+              category={category}
+              onEdit={(selectedCategory) => {
+                setIsFormOpen(false);
+                setEditingCategory(selectedCategory);
+              }}
+              onDelete={handleDelete}
+            />
+          ))}
+        </section>
+      )}
+    </div>
+  );
 }
