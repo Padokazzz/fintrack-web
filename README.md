@@ -6,11 +6,7 @@ Este repositório faz parte de um projeto full stack pensado para portfólio, co
 
 ## Preview
 
-> Adicione aqui uma screenshot do dashboard quando quiser deixar o repositório ainda mais visual.
-
-```text
-docs/images/dashboard-preview.png
-```
+![FinTrack Web Dashboard](docs/images/dashboard-preview.png)
 
 ## Funcionalidades
 
