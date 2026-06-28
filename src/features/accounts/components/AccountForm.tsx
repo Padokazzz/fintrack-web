@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { accountSchema, type AccountFormData } from "../account-schemas";
+import { useLanguage } from "../../../lib/i18n/useLanguage";
+import { createAccountSchema, type AccountFormData } from "../account-schemas";
 import type { AccountType } from "../types";
 
 type AccountFormProps = {
@@ -11,12 +12,12 @@ type AccountFormProps = {
   onSubmit: (data: AccountFormData) => void;
 };
 
-const accountTypes: { label: string; value: AccountType }[] = [
-  { label: "Checking", value: 1 },
-  { label: "Savings", value: 2 },
-  { label: "Cash", value: 3 },
-  { label: "Credit card", value: 4 },
-  { label: "Investment", value: 5 },
+const accountTypes: { labelKey: keyof ReturnType<typeof useLanguage>["t"]["accountTypes"]; value: AccountType }[] = [
+  { labelKey: "checking", value: 1 },
+  { labelKey: "savings", value: 2 },
+  { labelKey: "cash", value: 3 },
+  { labelKey: "creditCard", value: 4 },
+  { labelKey: "investment", value: 5 },
 ];
 
 export function AccountForm({
@@ -26,12 +27,14 @@ export function AccountForm({
   showInitialBalance = true,
   onSubmit,
 }: AccountFormProps) {
+  const { t } = useLanguage();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<AccountFormData>({
-    resolver: zodResolver(accountSchema),
+    resolver: zodResolver(createAccountSchema(t)),
     defaultValues: {
       name: defaultValues?.name ?? "",
       type: defaultValues?.type ?? 1,
@@ -42,7 +45,9 @@ export function AccountForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label className="text-sm font-medium text-slate-700">Name</label>
+        <label className="text-sm font-medium text-slate-700">
+          {t.common.name}
+        </label>
         <input
           type="text"
           {...register("name")}
@@ -54,14 +59,16 @@ export function AccountForm({
       </div>
 
       <div>
-        <label className="text-sm font-medium text-slate-700">Type</label>
+        <label className="text-sm font-medium text-slate-700">
+          {t.common.type}
+        </label>
         <select
           {...register("type", { valueAsNumber: true })}
           className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500"
         >
           {accountTypes.map((type) => (
             <option key={type.value} value={type.value}>
-              {type.label}
+              {t.accountTypes[type.labelKey]}
             </option>
           ))}
         </select>
@@ -73,7 +80,7 @@ export function AccountForm({
       {showInitialBalance && (
         <div>
           <label className="text-sm font-medium text-slate-700">
-            Initial balance
+            {t.accounts.initialBalance}
           </label>
           <input
             type="number"
@@ -94,7 +101,7 @@ export function AccountForm({
         disabled={isSubmitting}
         className="inline-flex h-10 items-center rounded-md bg-emerald-600 px-4 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isSubmitting ? "Saving..." : submitLabel}
+        {isSubmitting ? t.common.saving : submitLabel}
       </button>
     </form>
   );

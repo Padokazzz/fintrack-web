@@ -1,5 +1,6 @@
 import { Pencil, Trash2 } from "lucide-react";
-import { transactionTypeLabels, type Category } from "../types";
+import { useLanguage } from "../../../lib/i18n/useLanguage";
+import type { Category } from "../types";
 
 type CategoryCardProps = {
   category: Category;
@@ -12,6 +13,7 @@ export function CategoryCard({
   onEdit,
   onDelete,
 }: CategoryCardProps) {
+  const { t } = useLanguage();
   const isIncome = category.type === 1;
 
   return (
@@ -29,7 +31,7 @@ export function CategoryCard({
                 : "mt-2 inline-flex rounded-md bg-rose-50 px-2 py-1 text-xs font-medium text-rose-700"
             }
           >
-            {transactionTypeLabels[category.type]}
+            {isIncome ? t.common.income : t.common.expense}
           </span>
         </div>
 
@@ -38,7 +40,7 @@ export function CategoryCard({
             type="button"
             onClick={() => onEdit(category)}
             className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 text-slate-600 transition hover:bg-slate-50"
-            aria-label="Edit category"
+            aria-label={t.categories.editLabel}
           >
             <Pencil className="h-4 w-4" />
           </button>
@@ -47,7 +49,7 @@ export function CategoryCard({
             type="button"
             onClick={() => onDelete(category)}
             className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 text-rose-600 transition hover:bg-rose-50"
-            aria-label="Delete category"
+            aria-label={t.categories.deleteLabel}
           >
             <Trash2 className="h-4 w-4" />
           </button>

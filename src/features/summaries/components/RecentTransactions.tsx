@@ -1,4 +1,5 @@
-import { formatCurrency } from "../../../lib/formatters";
+import { formatCurrency, formatDate } from "../../../lib/formatters";
+import { useLanguage } from "../../../lib/i18n/useLanguage";
 import type { Transaction } from "../../transactions/types";
 
 type RecentTransactionsProps = {
@@ -6,40 +7,34 @@ type RecentTransactionsProps = {
   isLoading?: boolean;
 };
 
-function formatTransactionDate(value: string) {
-  const datePart = value.slice(0, 10);
-  const [year, month, day] = datePart.split("-");
-
-  return `${month}/${day}/${year}`;
-}
-
 export function RecentTransactions({
   transactions,
   isLoading = false,
 }: RecentTransactionsProps) {
+  const { currency, locale, t } = useLanguage();
   const recentTransactions = transactions.slice(0, 5);
 
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-5">
       <div className="mb-5">
         <h2 className="text-base font-semibold text-slate-950">
-          Recent transactions
+          {t.summaries.recentTransactions}
         </h2>
 
         <p className="mt-1 text-sm text-slate-500">
-          Latest movements in your accounts
+          {t.summaries.recentTransactionsDescription}
         </p>
       </div>
 
       {isLoading && (
         <p className="text-sm text-slate-500">
-          Loading recent transactions...
+          {t.summaries.loadingRecentTransactions}
         </p>
       )}
 
       {!isLoading && recentTransactions.length === 0 && (
         <p className="text-sm text-slate-500">
-          No transactions this month.
+          {t.summaries.noTransactionsThisMonth}
         </p>
       )}
 
@@ -59,8 +54,7 @@ export function RecentTransactions({
                   </p>
 
                   <p className="mt-1 text-xs text-slate-500">
-                    {transaction.categoryName} ·{" "}
-                    {formatTransactionDate(transaction.date)}
+                    {transaction.categoryName} · {formatDate(transaction.date, locale)}
                   </p>
                 </div>
 
@@ -72,7 +66,7 @@ export function RecentTransactions({
                   }
                 >
                   {isIncome ? "+" : "-"}
-                  {formatCurrency(transaction.amount)}
+                  {formatCurrency(transaction.amount, locale, currency)}
                 </strong>
               </div>
             );

@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Alert } from "../../components/ui/Alert";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { getApiErrorMessage } from "../../lib/api-error";
+import { useLanguage } from "../../lib/i18n/useLanguage";
 import { getAccounts } from "../accounts/accounts-service";
 import { getCategories } from "../categories/categories-service";
 import type { TransactionFormData } from "./transaction-schemas";
@@ -36,6 +37,7 @@ function getInitialFilters(): Filters {
 
 export function TransactionsPage() {
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
 
   const [filters, setFilters] = useState<Filters>(
     getInitialFilters
@@ -124,7 +126,7 @@ export function TransactionsPage() {
 
   function handleDelete(transaction: Transaction) {
     const confirmed = window.confirm(
-      `Are you sure you want to delete "${transaction.description}"?`
+      t.transactions.confirmDelete(transaction.description)
     );
 
     if (!confirmed) {
@@ -149,11 +151,11 @@ export function TransactionsPage() {
       <header className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
         <div>
           <h1 className="text-2xl font-semibold text-slate-950">
-            Transactions
+            {t.transactions.title}
           </h1>
 
           <p className="mt-1 text-sm text-slate-500">
-            Register income and expenses across your accounts.
+            {t.transactions.description}
           </p>
         </div>
 
@@ -170,21 +172,21 @@ export function TransactionsPage() {
           className="inline-flex h-10 items-center gap-2 rounded-md bg-emerald-600 px-4 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Plus className="h-4 w-4" />
-          New transaction
+          {t.transactions.newTransaction}
         </button>
       </header>
 
       {!accountsQuery.isLoading &&
         accounts.length === 0 && (
           <Alert variant="warning">
-            Create an account before registering transactions.
+            {t.transactions.needsAccount}
           </Alert>
         )}
 
       {!categoriesQuery.isLoading &&
         categories.length === 0 && (
           <Alert variant="warning">
-            Create a category before registering transactions.
+            {t.transactions.needsCategory}
           </Alert>
         )}
 
@@ -197,7 +199,7 @@ export function TransactionsPage() {
       {isFormOpen && canCreateTransaction && (
         <section className="rounded-lg border border-slate-200 bg-white p-5">
           <h2 className="mb-4 text-base font-semibold text-slate-950">
-            Create transaction
+            {t.transactions.createTransaction}
           </h2>
 
           {createMutation.isError && (
@@ -205,7 +207,7 @@ export function TransactionsPage() {
               <Alert variant="error">
                 {getApiErrorMessage(
                   createMutation.error,
-                  "Could not create transaction. Check the information and try again."
+                  t.transactions.createError
                 )}
               </Alert>
             </div>
@@ -214,7 +216,7 @@ export function TransactionsPage() {
           <TransactionForm
             accounts={accounts}
             categories={categories}
-            submitLabel="Create transaction"
+            submitLabel={t.transactions.createTransaction}
             isSubmitting={createMutation.isPending}
             onSubmit={handleCreate}
             onCancel={() => setIsFormOpen(false)}
@@ -225,7 +227,7 @@ export function TransactionsPage() {
       {editingTransaction && (
         <section className="rounded-lg border border-slate-200 bg-white p-5">
           <h2 className="mb-4 text-base font-semibold text-slate-950">
-            Edit transaction
+            {t.transactions.editTransaction}
           </h2>
 
           {updateMutation.isError && (
@@ -233,7 +235,7 @@ export function TransactionsPage() {
               <Alert variant="error">
                 {getApiErrorMessage(
                   updateMutation.error,
-                  "Could not update transaction. Check the information and try again."
+                  t.transactions.updateError
                 )}
               </Alert>
             </div>
@@ -251,7 +253,7 @@ export function TransactionsPage() {
               accountId: editingTransaction.accountId,
               categoryId: editingTransaction.categoryId,
             }}
-            submitLabel="Save changes"
+            submitLabel={t.common.saveChanges}
             isSubmitting={updateMutation.isPending}
             onSubmit={handleUpdate}
             onCancel={() => setEditingTransaction(null)}
@@ -261,7 +263,7 @@ export function TransactionsPage() {
 
       {transactionsQuery.isLoading && (
         <p className="text-sm text-slate-500">
-          Loading transactions...
+          {t.transactions.loading}
         </p>
       )}
 
@@ -269,7 +271,7 @@ export function TransactionsPage() {
         <Alert variant="error">
           {getApiErrorMessage(
             transactionsQuery.error,
-            "Could not load transactions."
+            t.transactions.loadError
           )}
         </Alert>
       )}
@@ -278,8 +280,8 @@ export function TransactionsPage() {
         !transactionsQuery.isError &&
         transactions.length === 0 && (
           <EmptyState
-            title="No transactions found"
-            description="Register a transaction or change the selected filters."
+            title={t.transactions.emptyTitle}
+            description={t.transactions.emptyDescription}
           />
         )}
 
@@ -290,31 +292,31 @@ export function TransactionsPage() {
               <thead className="bg-slate-50">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500">
-                    Date
+                    {t.transactions.table.date}
                   </th>
 
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500">
-                    Description
+                    {t.transactions.table.description}
                   </th>
 
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500">
-                    Category
+                    {t.transactions.table.category}
                   </th>
 
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500">
-                    Account
+                    {t.transactions.table.account}
                   </th>
 
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-slate-500">
-                    Type
+                    {t.transactions.table.type}
                   </th>
 
                   <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-slate-500">
-                    Amount
+                    {t.transactions.table.amount}
                   </th>
 
                   <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-slate-500">
-                    Actions
+                    {t.transactions.table.actions}
                   </th>
                 </tr>
               </thead>

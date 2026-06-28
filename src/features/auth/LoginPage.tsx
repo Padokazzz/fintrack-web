@@ -4,19 +4,21 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { Alert } from "../../components/ui/Alert";
 import { AuthShell } from "../../components/ui/AuthShell";
+import { useLanguage } from "../../lib/i18n/useLanguage";
 import { loginUser } from "./auth-service";
-import { loginSchema, type LoginFormData } from "./auth-schemas";
+import { createLoginSchema, type LoginFormData } from "./auth-schemas";
 import { useAuth } from "./use-auth";
 
 export function LoginPage() {
   const { handleLoginSuccess } = useAuth();
+  const { t } = useLanguage();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(createLoginSchema(t)),
   });
 
   const loginMutation = useMutation({
@@ -30,12 +32,14 @@ export function LoginPage() {
 
   return (
     <AuthShell
-      title="Sign in"
-      description="Access your financial dashboard, transactions, and monthly reports."
+      title={t.auth.signIn}
+      description={t.auth.signInDescription}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="text-sm font-medium text-slate-700">Email</label>
+          <label className="text-sm font-medium text-slate-700">
+            {t.auth.email}
+          </label>
           <input
             type="email"
             autoComplete="email"
@@ -51,7 +55,7 @@ export function LoginPage() {
 
         <div>
           <label className="text-sm font-medium text-slate-700">
-            Password
+            {t.auth.password}
           </label>
           <input
             type="password"
@@ -67,7 +71,7 @@ export function LoginPage() {
         </div>
 
         {loginMutation.isError && (
-          <Alert variant="error">Invalid email or password.</Alert>
+          <Alert variant="error">{t.auth.invalidCredentials}</Alert>
         )}
 
         <button
@@ -75,14 +79,14 @@ export function LoginPage() {
           disabled={loginMutation.isPending}
           className="inline-flex h-10 w-full items-center justify-center rounded-md bg-emerald-600 px-4 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {loginMutation.isPending ? "Signing in..." : "Sign in"}
+          {loginMutation.isPending ? t.auth.signingIn : t.auth.signIn}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-slate-500">
-        Don't have an account?{" "}
+        {t.auth.noAccount}{" "}
         <Link className="font-medium text-emerald-700" to="/register">
-          Create account
+          {t.auth.createAccount}
         </Link>
       </p>
     </AuthShell>
