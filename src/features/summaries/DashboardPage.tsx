@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { Alert } from "../../components/ui/Alert";
 import { SummaryCard } from "../../components/ui/SummaryCard";
 import { formatCurrency } from "../../lib/formatters";
+import { useLanguage } from "../../lib/i18n/useLanguage";
 import { getTransactions } from "../transactions/transactions-service";
 import { MonthYearSelector } from "./components/MonthYearSelector";
 import { MonthlyOverviewChart } from "./components/MonthlyOverviewChart";
@@ -19,6 +21,7 @@ function getCurrentPeriod() {
 
 export function DashboardPage() {
   const currentPeriod = getCurrentPeriod();
+  const { currency, locale, t } = useLanguage();
 
   const [month, setMonth] = useState(currentPeriod.month);
   const [year, setYear] = useState(currentPeriod.year);
@@ -49,11 +52,11 @@ export function DashboardPage() {
       <header className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
         <div>
           <h1 className="text-2xl font-semibold text-slate-950">
-            Dashboard
+            {t.summaries.dashboardTitle}
           </h1>
 
           <p className="mt-1 text-sm text-slate-500">
-            Track your monthly financial performance.
+            {t.summaries.dashboardDescription}
           </p>
         </div>
 
@@ -66,56 +69,52 @@ export function DashboardPage() {
       </header>
 
       {summaryQuery.isError && (
-        <section className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-          Could not load the monthly summary.
-        </section>
+        <Alert variant="error">{t.summaries.loadSummaryError}</Alert>
       )}
 
       {transactionsQuery.isError && (
-        <section className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-          Could not load transactions for this period.
-        </section>
+        <Alert variant="error">{t.summaries.loadTransactionsError}</Alert>
       )}
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
-          title="Income"
+          title={t.common.income}
           value={
             summaryQuery.isLoading
-              ? "Loading..."
-              : formatCurrency(totalIncome)
+              ? t.common.loading
+              : formatCurrency(totalIncome, locale, currency)
           }
-          description="Total income this month"
+          description={t.summaries.incomeThisMonth}
         />
 
         <SummaryCard
-          title="Expenses"
+          title={t.common.expenses}
           value={
             summaryQuery.isLoading
-              ? "Loading..."
-              : formatCurrency(totalExpense)
+              ? t.common.loading
+              : formatCurrency(totalExpense, locale, currency)
           }
-          description="Total expenses this month"
+          description={t.summaries.expensesThisMonth}
         />
 
         <SummaryCard
-          title="Final balance"
+          title={t.common.finalBalance}
           value={
             summaryQuery.isLoading
-              ? "Loading..."
-              : formatCurrency(finalBalance)
+              ? t.common.loading
+              : formatCurrency(finalBalance, locale, currency)
           }
-          description="Income minus expenses"
+          description={t.summaries.incomeMinusExpenses}
         />
 
         <SummaryCard
-          title="Transactions"
+          title={t.summaries.transactions}
           value={
             transactionsQuery.isLoading
-              ? "Loading..."
+              ? t.common.loading
               : String(transactions.length)
           }
-          description="Movements registered"
+          description={t.summaries.movementsRegistered}
         />
       </section>
 

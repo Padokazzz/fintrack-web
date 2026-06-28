@@ -6,43 +6,46 @@ import {
   Wallet,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useLanguage } from "../../lib/i18n/useLanguage";
 
 const navItems = [
   {
-    label: "Dashboard",
+    labelKey: "dashboard",
     to: "/dashboard",
     icon: LayoutDashboard,
   },
   {
-    label: "Accounts",
+    labelKey: "accounts",
     to: "/accounts",
     icon: Wallet,
   },
   {
-    label: "Categories",
+    labelKey: "categories",
     to: "/categories",
     icon: Tags,
   },
   {
-    label: "Transactions",
+    labelKey: "transactions",
     to: "/transactions",
     icon: ArrowLeftRight,
   },
   {
-    label: "Reports",
+    labelKey: "reports",
     to: "/reports/monthly-summary",
     icon: ChartNoAxesCombined,
   },
-];
+] as const;
 
 export function Sidebar() {
+  const { t } = useLanguage();
+
   return (
     <aside className="hidden w-64 shrink-0 border-r border-slate-200 bg-white px-4 py-5 md:block">
       <div className="mb-8 px-2">
         <h1 className="text-xl font-semibold tracking-normal text-slate-950">
           FinTrack
         </h1>
-        <p className="mt-1 text-sm text-slate-500">Personal finance</p>
+        <p className="mt-1 text-sm text-slate-500">{t.personalFinance}</p>
       </div>
 
       <nav className="space-y-1">
@@ -63,7 +66,7 @@ export function Sidebar() {
               }
             >
               <Icon className="h-4 w-4" />
-              <span>{item.label}</span>
+              <span>{t.nav[item.labelKey]}</span>
             </NavLink>
           );
         })}

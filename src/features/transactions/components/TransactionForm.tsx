@@ -1,12 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
+import { useLanguage } from "../../../lib/i18n/useLanguage";
 import type { Account } from "../../accounts/types";
 import type {
   Category,
   TransactionType,
 } from "../../categories/types";
 import {
-  transactionSchema,
+  createTransactionSchema,
   type TransactionFormData,
 } from "../transaction-schemas";
 
@@ -47,6 +48,8 @@ export function TransactionForm({
   onSubmit,
   onCancel,
 }: TransactionFormProps) {
+  const { t } = useLanguage();
+
   const {
     register,
     handleSubmit,
@@ -54,7 +57,7 @@ export function TransactionForm({
     setValue,
     formState: { errors },
   } = useForm<TransactionFormData>({
-    resolver: zodResolver(transactionSchema),
+    resolver: zodResolver(createTransactionSchema(t)),
     defaultValues: {
       description: defaultValues?.description ?? "",
       amount: defaultValues?.amount ?? 0,
@@ -86,12 +89,12 @@ export function TransactionForm({
       <div className="grid gap-4 md:grid-cols-2">
         <div className="md:col-span-2">
           <label className="text-sm font-medium text-slate-700">
-            Description
+            {t.transactions.descriptionLabel}
           </label>
 
           <input
             type="text"
-            placeholder="Example: Supermarket"
+            placeholder={t.transactions.descriptionPlaceholder}
             {...register("description")}
             className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500"
           />
@@ -105,7 +108,7 @@ export function TransactionForm({
 
         <div>
           <label className="text-sm font-medium text-slate-700">
-            Amount
+            {t.transactions.amount}
           </label>
 
           <input
@@ -127,7 +130,7 @@ export function TransactionForm({
 
         <div>
           <label className="text-sm font-medium text-slate-700">
-            Date
+            {t.transactions.date}
           </label>
 
           <input
@@ -145,7 +148,7 @@ export function TransactionForm({
 
         <div>
           <label className="text-sm font-medium text-slate-700">
-            Type
+            {t.common.type}
           </label>
 
           <select
@@ -161,7 +164,7 @@ export function TransactionForm({
           >
             {transactionTypes.map((type) => (
               <option key={type.value} value={type.value}>
-                {type.label}
+                {type.value === 1 ? t.common.income : t.common.expense}
               </option>
             ))}
           </select>
@@ -175,14 +178,14 @@ export function TransactionForm({
 
         <div>
           <label className="text-sm font-medium text-slate-700">
-            Account
+            {t.transactions.account}
           </label>
 
           <select
             {...register("accountId")}
             className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500"
           >
-            <option value="">Select an account</option>
+            <option value="">{t.transactions.selectAccount}</option>
 
             {accounts.map((account) => (
               <option key={account.id} value={account.id}>
@@ -200,14 +203,14 @@ export function TransactionForm({
 
         <div>
           <label className="text-sm font-medium text-slate-700">
-            Category
+            {t.transactions.category}
           </label>
 
           <select
             {...register("categoryId")}
             className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500"
           >
-            <option value="">Select a category</option>
+            <option value="">{t.transactions.selectCategory}</option>
 
             {availableCategories.map((category) => (
               <option
@@ -233,7 +236,7 @@ export function TransactionForm({
           disabled={isSubmitting}
           className="inline-flex h-10 items-center rounded-md bg-emerald-600 px-4 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isSubmitting ? "Saving..." : submitLabel}
+          {isSubmitting ? t.common.saving : submitLabel}
         </button>
 
         <button
@@ -242,7 +245,7 @@ export function TransactionForm({
           disabled={isSubmitting}
           className="inline-flex h-10 items-center rounded-md border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
         >
-          Cancel
+          {t.common.cancel}
         </button>
       </div>
     </form>

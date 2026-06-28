@@ -8,6 +8,7 @@ import {
   YAxis,
 } from "recharts";
 import { formatCurrency } from "../../../lib/formatters";
+import { useLanguage } from "../../../lib/i18n/useLanguage";
 
 type MonthlyOverviewChartProps = {
   totalIncome: number;
@@ -20,19 +21,21 @@ export function MonthlyOverviewChart({
   totalExpense,
   finalBalance,
 }: MonthlyOverviewChartProps) {
+  const { currency, locale, t } = useLanguage();
+
   const data = [
     {
-      name: "Income",
+      name: t.common.income,
       amount: totalIncome,
       fill: "#059669",
     },
     {
-      name: "Expenses",
+      name: t.common.expenses,
       amount: totalExpense,
       fill: "#e11d48",
     },
     {
-      name: "Balance",
+      name: t.common.balance,
       amount: finalBalance,
       fill: finalBalance >= 0 ? "#2563eb" : "#e11d48",
     },
@@ -42,11 +45,11 @@ export function MonthlyOverviewChart({
     <section className="rounded-lg border border-slate-200 bg-white p-5">
       <div className="mb-5">
         <h2 className="text-base font-semibold text-slate-950">
-          Monthly overview
+          {t.summaries.monthlyOverview}
         </h2>
 
         <p className="mt-1 text-sm text-slate-500">
-          Income, expenses and final balance
+          {t.summaries.monthlyOverviewDescription}
         </p>
       </div>
 
@@ -68,14 +71,14 @@ export function MonthlyOverviewChart({
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) =>
-                formatCurrency(Number(value))
+                formatCurrency(Number(value), locale, currency)
               }
               width={90}
             />
 
             <Tooltip
               formatter={(value) =>
-                formatCurrency(Number(value))
+                formatCurrency(Number(value), locale, currency)
               }
               cursor={{ fill: "#f1f5f9" }}
             />

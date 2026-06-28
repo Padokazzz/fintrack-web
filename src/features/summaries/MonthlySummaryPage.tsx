@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { Alert } from "../../components/ui/Alert";
 import { SummaryCard } from "../../components/ui/SummaryCard";
 import { formatCurrency } from "../../lib/formatters";
+import { useLanguage } from "../../lib/i18n/useLanguage";
 import { getTransactions } from "../transactions/transactions-service";
 import { MonthYearSelector } from "./components/MonthYearSelector";
 import { MonthlyOverviewChart } from "./components/MonthlyOverviewChart";
@@ -19,6 +21,7 @@ function getCurrentPeriod() {
 
 export function MonthlySummaryPage() {
   const currentPeriod = getCurrentPeriod();
+  const { currency, locale, t } = useLanguage();
 
   const [month, setMonth] = useState(currentPeriod.month);
   const [year, setYear] = useState(currentPeriod.year);
@@ -49,11 +52,11 @@ export function MonthlySummaryPage() {
       <header className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
         <div>
           <h1 className="text-2xl font-semibold text-slate-950">
-            Monthly Summary
+            {t.summaries.monthlyTitle}
           </h1>
 
           <p className="mt-1 text-sm text-slate-500">
-            Review your financial results for a selected period.
+            {t.summaries.monthlyDescription}
           </p>
         </div>
 
@@ -66,46 +69,42 @@ export function MonthlySummaryPage() {
       </header>
 
       {summaryQuery.isError && (
-        <section className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-          Could not load the monthly summary.
-        </section>
+        <Alert variant="error">{t.summaries.loadSummaryError}</Alert>
       )}
 
       {transactionsQuery.isError && (
-        <section className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-          Could not load transactions for this period.
-        </section>
+        <Alert variant="error">{t.summaries.loadTransactionsError}</Alert>
       )}
 
       <section className="grid gap-4 md:grid-cols-3">
         <SummaryCard
-          title="Total income"
+          title={t.summaries.totalIncome}
           value={
             summaryQuery.isLoading
-              ? "Loading..."
-              : formatCurrency(totalIncome)
+              ? t.common.loading
+              : formatCurrency(totalIncome, locale, currency)
           }
-          description="Income registered in this period"
+          description={t.summaries.incomeInPeriod}
         />
 
         <SummaryCard
-          title="Total expenses"
+          title={t.summaries.totalExpenses}
           value={
             summaryQuery.isLoading
-              ? "Loading..."
-              : formatCurrency(totalExpense)
+              ? t.common.loading
+              : formatCurrency(totalExpense, locale, currency)
           }
-          description="Expenses registered in this period"
+          description={t.summaries.expensesInPeriod}
         />
 
         <SummaryCard
-          title="Final balance"
+          title={t.common.finalBalance}
           value={
             summaryQuery.isLoading
-              ? "Loading..."
-              : formatCurrency(finalBalance)
+              ? t.common.loading
+              : formatCurrency(finalBalance, locale, currency)
           }
-          description="Income minus expenses"
+          description={t.summaries.incomeMinusExpenses}
         />
       </section>
 

@@ -2,6 +2,7 @@ import type {
   Category,
   TransactionType,
 } from "../../categories/types";
+import { useLanguage } from "../../../lib/i18n/useLanguage";
 import type { TransactionFilters as Filters } from "../types";
 
 type TransactionFiltersProps = {
@@ -10,26 +11,13 @@ type TransactionFiltersProps = {
   onChange: (filters: Filters) => void;
 };
 
-const months = [
-  { value: 1, label: "January" },
-  { value: 2, label: "February" },
-  { value: 3, label: "March" },
-  { value: 4, label: "April" },
-  { value: 5, label: "May" },
-  { value: 6, label: "June" },
-  { value: 7, label: "July" },
-  { value: 8, label: "August" },
-  { value: 9, label: "September" },
-  { value: 10, label: "October" },
-  { value: 11, label: "November" },
-  { value: 12, label: "December" },
-];
-
 export function TransactionFilters({
   filters,
   categories,
   onChange,
 }: TransactionFiltersProps) {
+  const { t } = useLanguage();
+
   const availableCategories = filters.type
     ? categories.filter(
         (category) => category.type === filters.type
@@ -45,7 +33,7 @@ export function TransactionFilters({
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <div>
           <label className="text-sm font-medium text-slate-700">
-            Month
+            {t.summaries.month}
           </label>
 
           <select
@@ -60,11 +48,11 @@ export function TransactionFilters({
             }
             className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500"
           >
-            <option value="">All months</option>
+            <option value="">{t.transactions.allMonths}</option>
 
-            {months.map((month) => (
-              <option key={month.value} value={month.value}>
-                {month.label}
+            {t.summaries.months.map((month, index) => (
+              <option key={month} value={index + 1}>
+                {month}
               </option>
             ))}
           </select>
@@ -72,7 +60,7 @@ export function TransactionFilters({
 
         <div>
           <label className="text-sm font-medium text-slate-700">
-            Year
+            {t.summaries.year}
           </label>
 
           <input
@@ -94,7 +82,7 @@ export function TransactionFilters({
 
         <div>
           <label className="text-sm font-medium text-slate-700">
-            Type
+            {t.common.type}
           </label>
 
           <select
@@ -112,15 +100,15 @@ export function TransactionFilters({
             }}
             className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500"
           >
-            <option value="">All types</option>
-            <option value={1}>Income</option>
-            <option value={2}>Expense</option>
+            <option value="">{t.transactions.allTypes}</option>
+            <option value={1}>{t.common.income}</option>
+            <option value={2}>{t.common.expense}</option>
           </select>
         </div>
 
         <div>
           <label className="text-sm font-medium text-slate-700">
-            Category
+            {t.transactions.category}
           </label>
 
           <select
@@ -134,7 +122,7 @@ export function TransactionFilters({
             }
             className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500"
           >
-            <option value="">All categories</option>
+            <option value="">{t.transactions.allCategories}</option>
 
             {availableCategories.map((category) => (
               <option
@@ -153,7 +141,7 @@ export function TransactionFilters({
             onClick={clearFilters}
             className="h-10 w-full rounded-md border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
           >
-            Clear filters
+            {t.transactions.clearFilters}
           </button>
         </div>
       </div>

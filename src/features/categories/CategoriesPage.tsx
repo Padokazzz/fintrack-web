@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Alert } from "../../components/ui/Alert";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { getApiErrorMessage } from "../../lib/api-error";
+import { useLanguage } from "../../lib/i18n/useLanguage";
 import type { CategoryFormData } from "./category-schemas";
 import {
   createCategory,
@@ -17,6 +18,7 @@ import type { Category } from "./types";
 
 export function CategoriesPage() {
   const queryClient = useQueryClient();
+  const { t } = useLanguage();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
@@ -65,9 +67,7 @@ export function CategoriesPage() {
   }
 
   function handleDelete(category: Category) {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${category.name}"?`
-    );
+    const confirmed = window.confirm(t.categories.confirmDelete(category.name));
 
     if (!confirmed) {
       return;
@@ -82,9 +82,11 @@ export function CategoriesPage() {
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-950">Categories</h1>
+          <h1 className="text-2xl font-semibold text-slate-950">
+            {t.categories.title}
+          </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Organize income and expenses for your transactions.
+            {t.categories.description}
           </p>
         </div>
 
@@ -97,14 +99,14 @@ export function CategoriesPage() {
           className="inline-flex h-10 items-center gap-2 rounded-md bg-emerald-600 px-4 text-sm font-medium text-white transition hover:bg-emerald-700"
         >
           <Plus className="h-4 w-4" />
-          New category
+          {t.categories.newCategory}
         </button>
       </div>
 
       {isFormOpen && (
         <section className="rounded-lg border border-slate-200 bg-white p-5">
           <h2 className="mb-4 text-base font-semibold text-slate-950">
-            Create category
+            {t.categories.createCategory}
           </h2>
 
           {createMutation.isError && (
@@ -112,14 +114,14 @@ export function CategoriesPage() {
               <Alert variant="error">
                 {getApiErrorMessage(
                   createMutation.error,
-                  "Could not create category. Check the form data and try again."
+                  t.categories.createError
                 )}
               </Alert>
             </div>
           )}
 
           <CategoryForm
-            submitLabel="Create category"
+            submitLabel={t.categories.createCategory}
             isSubmitting={createMutation.isPending}
             onSubmit={handleCreate}
           />
@@ -129,7 +131,7 @@ export function CategoriesPage() {
       {editingCategory && (
         <section className="rounded-lg border border-slate-200 bg-white p-5">
           <h2 className="mb-4 text-base font-semibold text-slate-950">
-            Edit category
+            {t.categories.editCategory}
           </h2>
 
           {updateMutation.isError && (
@@ -137,7 +139,7 @@ export function CategoriesPage() {
               <Alert variant="error">
                 {getApiErrorMessage(
                   updateMutation.error,
-                  "Could not update category. Check the form data and try again."
+                  t.categories.updateError
                 )}
               </Alert>
             </div>
@@ -148,7 +150,7 @@ export function CategoriesPage() {
               name: editingCategory.name,
               type: editingCategory.type,
             }}
-            submitLabel="Save changes"
+            submitLabel={t.common.saveChanges}
             isSubmitting={updateMutation.isPending}
             onSubmit={handleUpdate}
           />
@@ -156,14 +158,14 @@ export function CategoriesPage() {
       )}
 
       {categoriesQuery.isLoading && (
-        <p className="text-sm text-slate-500">Loading categories...</p>
+        <p className="text-sm text-slate-500">{t.categories.loading}</p>
       )}
 
       {categoriesQuery.isError && (
         <Alert variant="error">
           {getApiErrorMessage(
             categoriesQuery.error,
-            "Could not load categories."
+            t.categories.loadError
           )}
         </Alert>
       )}
@@ -172,8 +174,8 @@ export function CategoriesPage() {
         !categoriesQuery.isError &&
         categories.length === 0 && (
           <EmptyState
-            title="No categories yet"
-            description="Create your first category to classify transactions."
+            title={t.categories.emptyTitle}
+            description={t.categories.emptyDescription}
           />
         )}
 
