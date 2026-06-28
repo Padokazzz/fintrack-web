@@ -1,6 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { Alert } from "../../components/ui/Alert";
+import { EmptyState } from "../../components/ui/EmptyState";
+import { getApiErrorMessage } from "../../lib/api-error";
 import type { CategoryFormData } from "./category-schemas";
 import {
   createCategory,
@@ -105,9 +108,14 @@ export function CategoriesPage() {
           </h2>
 
           {createMutation.isError && (
-            <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-              Could not create category. Check the form data and try again.
-            </p>
+            <div className="mb-4">
+              <Alert variant="error">
+                {getApiErrorMessage(
+                  createMutation.error,
+                  "Could not create category. Check the form data and try again."
+                )}
+              </Alert>
+            </div>
           )}
 
           <CategoryForm
@@ -125,9 +133,14 @@ export function CategoriesPage() {
           </h2>
 
           {updateMutation.isError && (
-            <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-              Could not update category. Check the form data and try again.
-            </p>
+            <div className="mb-4">
+              <Alert variant="error">
+                {getApiErrorMessage(
+                  updateMutation.error,
+                  "Could not update category. Check the form data and try again."
+                )}
+              </Alert>
+            </div>
           )}
 
           <CategoryForm
@@ -147,22 +160,21 @@ export function CategoriesPage() {
       )}
 
       {categoriesQuery.isError && (
-        <section className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-          Could not load categories.
-        </section>
+        <Alert variant="error">
+          {getApiErrorMessage(
+            categoriesQuery.error,
+            "Could not load categories."
+          )}
+        </Alert>
       )}
 
       {!categoriesQuery.isLoading &&
         !categoriesQuery.isError &&
         categories.length === 0 && (
-          <section className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
-            <h2 className="text-base font-semibold text-slate-950">
-              No categories yet
-            </h2>
-            <p className="mt-2 text-sm text-slate-500">
-              Create your first category to classify transactions.
-            </p>
-          </section>
+          <EmptyState
+            title="No categories yet"
+            description="Create your first category to classify transactions."
+          />
         )}
 
       {categories.length > 0 && (

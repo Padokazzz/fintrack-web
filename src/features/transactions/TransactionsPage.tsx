@@ -5,6 +5,9 @@ import {
 } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { Alert } from "../../components/ui/Alert";
+import { EmptyState } from "../../components/ui/EmptyState";
+import { getApiErrorMessage } from "../../lib/api-error";
 import { getAccounts } from "../accounts/accounts-service";
 import { getCategories } from "../categories/categories-service";
 import type { TransactionFormData } from "./transaction-schemas";
@@ -173,16 +176,16 @@ export function TransactionsPage() {
 
       {!accountsQuery.isLoading &&
         accounts.length === 0 && (
-          <section className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+          <Alert variant="warning">
             Create an account before registering transactions.
-          </section>
+          </Alert>
         )}
 
       {!categoriesQuery.isLoading &&
         categories.length === 0 && (
-          <section className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+          <Alert variant="warning">
             Create a category before registering transactions.
-          </section>
+          </Alert>
         )}
 
       <TransactionFilters
@@ -198,10 +201,14 @@ export function TransactionsPage() {
           </h2>
 
           {createMutation.isError && (
-            <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-              Could not create transaction. Check the
-              information and try again.
-            </p>
+            <div className="mb-4">
+              <Alert variant="error">
+                {getApiErrorMessage(
+                  createMutation.error,
+                  "Could not create transaction. Check the information and try again."
+                )}
+              </Alert>
+            </div>
           )}
 
           <TransactionForm
@@ -222,10 +229,14 @@ export function TransactionsPage() {
           </h2>
 
           {updateMutation.isError && (
-            <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-              Could not update transaction. Check the
-              information and try again.
-            </p>
+            <div className="mb-4">
+              <Alert variant="error">
+                {getApiErrorMessage(
+                  updateMutation.error,
+                  "Could not update transaction. Check the information and try again."
+                )}
+              </Alert>
+            </div>
           )}
 
           <TransactionForm
@@ -255,24 +266,21 @@ export function TransactionsPage() {
       )}
 
       {transactionsQuery.isError && (
-        <section className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-          Could not load transactions.
-        </section>
+        <Alert variant="error">
+          {getApiErrorMessage(
+            transactionsQuery.error,
+            "Could not load transactions."
+          )}
+        </Alert>
       )}
 
       {!transactionsQuery.isLoading &&
         !transactionsQuery.isError &&
         transactions.length === 0 && (
-          <section className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
-            <h2 className="text-base font-semibold text-slate-950">
-              No transactions found
-            </h2>
-
-            <p className="mt-2 text-sm text-slate-500">
-              Register a transaction or change the selected
-              filters.
-            </p>
-          </section>
+          <EmptyState
+            title="No transactions found"
+            description="Register a transaction or change the selected filters."
+          />
         )}
 
       {transactions.length > 0 && (
