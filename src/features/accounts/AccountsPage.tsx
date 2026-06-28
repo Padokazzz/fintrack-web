@@ -1,6 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { Alert } from "../../components/ui/Alert";
+import { EmptyState } from "../../components/ui/EmptyState";
+import { getApiErrorMessage } from "../../lib/api-error";
 import type { AccountFormData } from "./account-schemas";
 import {
   createAccount,
@@ -112,9 +115,14 @@ export function AccountsPage() {
           </h2>
 
           {createMutation.isError && (
-            <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-              Could not create account. Check the form data and try again.
-            </p>
+            <div className="mb-4">
+              <Alert variant="error">
+                {getApiErrorMessage(
+                  createMutation.error,
+                  "Could not create account. Check the form data and try again."
+                )}
+              </Alert>
+            </div>
           )}
 
           <AccountForm
@@ -132,9 +140,14 @@ export function AccountsPage() {
           </h2>
 
           {updateMutation.isError && (
-            <p className="mb-4 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-              Could not update account. Check the form data and try again.
-            </p>
+            <div className="mb-4">
+              <Alert variant="error">
+                {getApiErrorMessage(
+                  updateMutation.error,
+                  "Could not update account. Check the form data and try again."
+                )}
+              </Alert>
+            </div>
           )}
 
           <AccountForm
@@ -155,20 +168,16 @@ export function AccountsPage() {
       )}
 
       {accountsQuery.isError && (
-        <section className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-          Could not load accounts.
-        </section>
+        <Alert variant="error">
+          {getApiErrorMessage(accountsQuery.error, "Could not load accounts.")}
+        </Alert>
       )}
 
       {!accountsQuery.isLoading && !accountsQuery.isError && accounts.length === 0 && (
-        <section className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
-          <h2 className="text-base font-semibold text-slate-950">
-            No accounts yet
-          </h2>
-          <p className="mt-2 text-sm text-slate-500">
-            Create your first account to start tracking your finances.
-          </p>
-        </section>
+        <EmptyState
+          title="No accounts yet"
+          description="Create your first account to start tracking your finances."
+        />
       )}
 
       {accounts.length > 0 && (
