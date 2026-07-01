@@ -17,6 +17,8 @@ export const translations = {
       categories: "Categories",
       transactions: "Transactions",
       reports: "Reports",
+      openMenu: "Open menu",
+      closeMenu: "Close menu",
     },
     auth: {
       signIn: "Sign in",
@@ -205,6 +207,8 @@ export const translations = {
       categories: "Categorias",
       transactions: "Transações",
       reports: "Relatórios",
+      openMenu: "Abrir menu",
+      closeMenu: "Fechar menu",
     },
     auth: {
       signIn: "Entrar",

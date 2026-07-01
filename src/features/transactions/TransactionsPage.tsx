@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Alert } from "../../components/ui/Alert";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { getApiErrorMessage } from "../../lib/api-error";
+import { formatCurrency, formatDate } from "../../lib/formatters";
 import { useLanguage } from "../../lib/i18n/useLanguage";
 import { getAccounts } from "../accounts/accounts-service";
 import { getCategories } from "../categories/categories-service";
@@ -37,7 +38,7 @@ function getInitialFilters(): Filters {
 
 export function TransactionsPage() {
   const queryClient = useQueryClient();
-  const { t } = useLanguage();
+  const { currency, locale, t } = useLanguage();
 
   const [filters, setFilters] = useState<Filters>(
     getInitialFilters
@@ -169,7 +170,7 @@ export function TransactionsPage() {
             setEditingTransaction(null);
             setIsFormOpen((current) => !current);
           }}
-          className="inline-flex h-10 items-center gap-2 rounded-md bg-emerald-600 px-4 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-emerald-600 px-4 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
           <Plus className="h-4 w-4" />
           {t.transactions.newTransaction}
@@ -286,7 +287,94 @@ export function TransactionsPage() {
         )}
 
       {transactions.length > 0 && (
-        <section className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <section className="grid gap-3 md:hidden">
+          {transactions.map((transaction) => {
+            const isIncome = transaction.type === 1;
+
+            return (
+              <article
+                key={transaction.id}
+                className="rounded-lg border border-slate-200 bg-white p-4"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-slate-950">
+                      {transaction.description}
+                    </p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      {formatDate(transaction.date, locale)}
+                    </p>
+                  </div>
+
+                  <strong
+                    className={
+                      isIncome
+                        ? "shrink-0 text-sm font-semibold text-emerald-700"
+                        : "shrink-0 text-sm font-semibold text-rose-700"
+                    }
+                  >
+                    {isIncome ? "+" : "-"}
+                    {formatCurrency(transaction.amount, locale, currency)}
+                  </strong>
+                </div>
+
+                <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <dt className="text-xs font-medium text-slate-500">
+                      {t.transactions.category}
+                    </dt>
+                    <dd className="mt-1 truncate text-slate-700">
+                      {transaction.categoryName}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt className="text-xs font-medium text-slate-500">
+                      {t.transactions.account}
+                    </dt>
+                    <dd className="mt-1 truncate text-slate-700">
+                      {transaction.accountName}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt className="text-xs font-medium text-slate-500">
+                      {t.common.type}
+                    </dt>
+                    <dd className="mt-1 text-slate-700">
+                      {isIncome ? t.common.income : t.common.expense}
+                    </dd>
+                  </div>
+                </dl>
+
+                <div className="mt-4 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsFormOpen(false);
+                      setEditingTransaction(transaction);
+                    }}
+                    className="h-9 flex-1 rounded-md border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                  >
+                    {t.common.edit}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(transaction)}
+                    className="h-9 flex-1 rounded-md border border-rose-200 bg-white px-3 text-sm font-medium text-rose-700 transition hover:bg-rose-50"
+                  >
+                    {t.common.delete}
+                  </button>
+                </div>
+              </article>
+            );
+          })}
+        </section>
+      )}
+
+      {transactions.length > 0 && (
+        <section className="hidden overflow-hidden rounded-lg border border-slate-200 bg-white md:block">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px] border-collapse">
               <thead className="bg-slate-50">
