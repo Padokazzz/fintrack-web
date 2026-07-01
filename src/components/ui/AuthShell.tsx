@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { LanguageSelect } from "../layout/LanguageSelect";
+import { ThemeSelect } from "../layout/ThemeSelect";
 
 type AuthShellProps = {
   title: string;
@@ -14,7 +15,10 @@ export function AuthShell({ title, description, children }: AuthShellProps) {
         <div className="mb-6">
           <div className="flex items-start justify-between gap-4">
             <p className="text-sm font-semibold text-emerald-700">FinTrack</p>
-            <LanguageSelect />
+            <div className="flex items-center gap-2">
+              <ThemeSelect />
+              <LanguageSelect />
+            </div>
           </div>
 
           <h1 className="mt-2 text-2xl font-semibold">{title}</h1>

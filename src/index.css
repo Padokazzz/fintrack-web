@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   color: #111827;
@@ -10,4 +12,131 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+}
+
+.dark {
+  color: #e5e7eb;
+  background: #020617;
+}
+
+.dark body {
+  background: #020617;
+}
+
+.dark .bg-white {
+  background-color: #0f172a;
+}
+
+.dark .bg-slate-100 {
+  background-color: #020617;
+}
+
+.dark .bg-slate-50 {
+  background-color: #111827;
+}
+
+.dark .bg-emerald-50 {
+  background-color: rgb(6 78 59 / 0.28);
+}
+
+.dark .bg-rose-50 {
+  background-color: rgb(136 19 55 / 0.28);
+}
+
+.dark .bg-amber-50 {
+  background-color: rgb(120 53 15 / 0.28);
+}
+
+.dark .text-slate-950 {
+  color: #f8fafc;
+}
+
+.dark .text-slate-700 {
+  color: #cbd5e1;
+}
+
+.dark .text-slate-600 {
+  color: #cbd5e1;
+}
+
+.dark .text-slate-500 {
+  color: #94a3b8;
+}
+
+.dark .text-emerald-700 {
+  color: #6ee7b7;
+}
+
+.dark .text-emerald-600 {
+  color: #34d399;
+}
+
+.dark .text-rose-700 {
+  color: #fda4af;
+}
+
+.dark .text-rose-600 {
+  color: #fb7185;
+}
+
+.dark .text-amber-800 {
+  color: #fcd34d;
+}
+
+.dark .border-slate-300,
+.dark .border-slate-200,
+.dark .border-slate-100 {
+  border-color: #334155;
+}
+
+.dark .border-rose-200 {
+  border-color: rgb(244 63 94 / 0.45);
+}
+
+.dark .border-amber-200 {
+  border-color: rgb(245 158 11 / 0.45);
+}
+
+.dark .border-emerald-200 {
+  border-color: rgb(16 185 129 / 0.45);
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: #111827;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b;
+}
+
+.dark option {
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+.dark .shadow-sm,
+.dark .shadow-xl {
+  box-shadow: 0 20px 45px rgb(0 0 0 / 0.28);
+}
+
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-slate-100:hover {
+  background-color: #1e293b;
+}
+
+.dark .hover\:text-slate-950:hover {
+  color: #f8fafc;
+}
+
+.dark .hover\:bg-rose-50:hover {
+  background-color: rgb(136 19 55 / 0.34);
+}
+
+.dark .hover\:bg-emerald-50:hover {
+  background-color: rgb(6 78 59 / 0.34);
 }
