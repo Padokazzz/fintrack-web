@@ -1,13 +1,15 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AppLayout } from "../components/layout/AppLayout";
 import { ProtectedRoute } from "../components/layout/ProtectedRoute";
-import { LoginPage } from "../features/auth/LoginPage";
-import { RegisterPage } from "../features/auth/RegisterPage";
-import { AccountsPage } from "../features/accounts/AccountsPage";
-import { CategoriesPage } from "../features/categories/CategoriesPage";
-import { TransactionsPage } from "../features/transactions/TransactionsPage";
-import { DashboardPage } from "../features/summaries/DashboardPage";
-import { MonthlySummaryPage } from "../features/summaries/MonthlySummaryPage";
+import {
+  AccountsRoute,
+  CategoriesRoute,
+  DashboardRoute,
+  LoginRoute,
+  MonthlySummaryRoute,
+  RegisterRoute,
+  TransactionsRoute,
+} from "./lazy-pages";
 
 export const router = createBrowserRouter([
   {
@@ -16,11 +18,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <LoginPage />,
+    element: <LoginRoute />,
   },
   {
     path: "/register",
-    element: <RegisterPage />,
+    element: <RegisterRoute />,
   },
   {
     element: <ProtectedRoute />,
@@ -30,23 +32,23 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "/dashboard",
-            element: <DashboardPage />,
+            element: <DashboardRoute />,
           },
           {
             path: "/accounts",
-            element: <AccountsPage />,
+            element: <AccountsRoute />,
           },
           {
             path: "/categories",
-            element: <CategoriesPage />,
+            element: <CategoriesRoute />,
           },
           {
             path: "/transactions",
-            element: <TransactionsPage />,
+            element: <TransactionsRoute />,
           },
           {
             path: "/reports/monthly-summary",
-            element: <MonthlySummaryPage />,
+            element: <MonthlySummaryRoute />,
           },
         ],
       },
