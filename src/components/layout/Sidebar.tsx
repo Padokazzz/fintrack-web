@@ -2,6 +2,7 @@ import {
   ArrowLeftRight,
   ChartNoAxesCombined,
   LayoutDashboard,
+  X,
   Tags,
   Wallet,
 } from "lucide-react";
@@ -36,41 +37,92 @@ const navItems = [
   },
 ] as const;
 
-export function Sidebar() {
+type SidebarProps = {
+  isMobileOpen: boolean;
+  onMobileClose: () => void;
+};
+
+function NavigationLinks({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useLanguage();
 
   return (
-    <aside className="hidden w-64 shrink-0 border-r border-slate-200 bg-white px-4 py-5 md:block">
-      <div className="mb-8 px-2">
-        <h1 className="text-xl font-semibold tracking-normal text-slate-950">
-          FinTrack
-        </h1>
-        <p className="mt-1 text-sm text-slate-500">{t.personalFinance}</p>
-      </div>
+    <nav className="space-y-1">
+      {navItems.map((item) => {
+        const Icon = item.icon;
 
-      <nav className="space-y-1">
-        {navItems.map((item) => {
-          const Icon = item.icon;
+        return (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            onClick={onNavigate}
+            className={({ isActive }) =>
+              [
+                "flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium transition",
+                isActive
+                  ? "bg-emerald-50 text-emerald-700"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+              ].join(" ")
+            }
+          >
+            <Icon className="h-4 w-4" />
+            <span>{t.nav[item.labelKey]}</span>
+          </NavLink>
+        );
+      })}
+    </nav>
+  );
+}
 
-          return (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                [
-                  "flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium transition",
-                  isActive
-                    ? "bg-emerald-50 text-emerald-700"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
-                ].join(" ")
-              }
-            >
-              <Icon className="h-4 w-4" />
-              <span>{t.nav[item.labelKey]}</span>
-            </NavLink>
-          );
-        })}
-      </nav>
-    </aside>
+export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
+  const { t } = useLanguage();
+
+  return (
+    <>
+      <aside className="hidden w-64 shrink-0 border-r border-slate-200 bg-white px-4 py-5 md:block">
+        <div className="mb-8 px-2">
+          <h1 className="text-xl font-semibold tracking-normal text-slate-950">
+            FinTrack
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">{t.personalFinance}</p>
+        </div>
+
+        <NavigationLinks />
+      </aside>
+
+      {isMobileOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <button
+            type="button"
+            className="absolute inset-0 bg-slate-950/40"
+            onClick={onMobileClose}
+            aria-label={t.nav.closeMenu}
+          />
+
+          <aside className="relative flex h-full w-72 max-w-[85vw] flex-col border-r border-slate-200 bg-white px-4 py-5 shadow-xl">
+            <div className="mb-8 flex items-start justify-between gap-4 px-2">
+              <div>
+                <h1 className="text-xl font-semibold tracking-normal text-slate-950">
+                  FinTrack
+                </h1>
+                <p className="mt-1 text-sm text-slate-500">
+                  {t.personalFinance}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={onMobileClose}
+                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 text-slate-700 transition hover:bg-slate-50"
+                aria-label={t.nav.closeMenu}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <NavigationLinks onNavigate={onMobileClose} />
+          </aside>
+        </div>
+      )}
+    </>
   );
 }
