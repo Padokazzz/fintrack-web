@@ -4,6 +4,7 @@ import { Alert } from "../../components/ui/Alert";
 import { SummaryCard } from "../../components/ui/SummaryCard";
 import { formatCurrency } from "../../lib/formatters";
 import { useLanguage } from "../../lib/i18n/useLanguage";
+import { getAccounts } from "../accounts/accounts-service";
 import { getTransactions } from "../transactions/transactions-service";
 import { MonthYearSelector } from "./components/MonthYearSelector";
 import { MonthlyOverviewChart } from "./components/MonthlyOverviewChart";
@@ -40,12 +41,22 @@ export function MonthlySummaryPage() {
       }),
   });
 
+  const accountsQuery = useQuery({
+    queryKey: ["accounts"],
+    queryFn: getAccounts,
+  });
+
   const summary = summaryQuery.data;
+  const accounts = accountsQuery.data ?? [];
   const transactions = transactionsQuery.data ?? [];
 
   const totalIncome = summary?.totalIncome ?? 0;
   const totalExpense = summary?.totalExpense ?? 0;
   const finalBalance = summary?.finalBalance ?? 0;
+  const overallBalance = accounts.reduce(
+    (total, account) => total + account.currentBalance,
+    0
+  );
 
   return (
     <div className="space-y-6">
@@ -76,7 +87,21 @@ export function MonthlySummaryPage() {
         <Alert variant="error">{t.summaries.loadTransactionsError}</Alert>
       )}
 
-      <section className="grid gap-4 md:grid-cols-3">
+      {accountsQuery.isError && (
+        <Alert variant="error">{t.summaries.loadAccountsError}</Alert>
+      )}
+
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <SummaryCard
+          title={t.summaries.overallBalance}
+          value={
+            accountsQuery.isLoading
+              ? t.common.loading
+              : formatCurrency(overallBalance, locale, currency)
+          }
+          description={t.summaries.overallBalanceDescription}
+        />
+
         <SummaryCard
           title={t.summaries.totalIncome}
           value={
