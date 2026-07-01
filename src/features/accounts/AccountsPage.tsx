@@ -31,6 +31,7 @@ export function AccountsPage() {
     mutationFn: createAccount,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["overall-balance"] });
       setIsFormOpen(false);
     },
   });
@@ -40,9 +41,10 @@ export function AccountsPage() {
       updateAccount(id, {
         name: data.name,
         type: data.type,
-      }),
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["overall-balance"] });
       setEditingAccount(null);
     },
   });
@@ -51,6 +53,7 @@ export function AccountsPage() {
     mutationFn: deleteAccount,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["overall-balance"] });
     },
   });
 

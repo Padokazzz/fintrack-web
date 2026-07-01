@@ -5,3 +5,8 @@ export type MonthlySummary = {
   totalExpense: number;
   finalBalance: number;
 };
+
+export type OverallBalance = {
+  totalBalance: number;
+  accountsCount: number;
+};
