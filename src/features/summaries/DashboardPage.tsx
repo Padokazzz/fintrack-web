@@ -4,12 +4,11 @@ import { Alert } from "../../components/ui/Alert";
 import { SummaryCard } from "../../components/ui/SummaryCard";
 import { formatCurrency } from "../../lib/formatters";
 import { useLanguage } from "../../lib/i18n/useLanguage";
-import { getAccounts } from "../accounts/accounts-service";
 import { getTransactions } from "../transactions/transactions-service";
 import { MonthYearSelector } from "./components/MonthYearSelector";
 import { MonthlyOverviewChart } from "./components/MonthlyOverviewChart";
 import { RecentTransactions } from "./components/RecentTransactions";
-import { getMonthlySummary } from "./summaries-service";
+import { getMonthlySummary, getOverallBalance } from "./summaries-service";
 
 function getCurrentPeriod() {
   const currentDate = new Date();
@@ -41,21 +40,17 @@ export function DashboardPage() {
       }),
   });
 
-  const accountsQuery = useQuery({
-    queryKey: ["accounts"],
-    queryFn: getAccounts,
+  const overallBalanceQuery = useQuery({
+    queryKey: ["overall-balance"],
+    queryFn: getOverallBalance,
   });
 
   const summary = summaryQuery.data;
-  const accounts = accountsQuery.data ?? [];
+  const overallBalance = overallBalanceQuery.data?.totalBalance ?? 0;
 
   const totalIncome = summary?.totalIncome ?? 0;
   const totalExpense = summary?.totalExpense ?? 0;
   const finalBalance = summary?.finalBalance ?? 0;
-  const overallBalance = accounts.reduce(
-    (total, account) => total + account.currentBalance,
-    0
-  );
   const transactions = transactionsQuery.data ?? [];
 
   return (
@@ -87,7 +82,7 @@ export function DashboardPage() {
         <Alert variant="error">{t.summaries.loadTransactionsError}</Alert>
       )}
 
-      {accountsQuery.isError && (
+      {overallBalanceQuery.isError && (
         <Alert variant="error">{t.summaries.loadAccountsError}</Alert>
       )}
 
@@ -95,7 +90,7 @@ export function DashboardPage() {
         <SummaryCard
           title={t.summaries.overallBalance}
           value={
-            accountsQuery.isLoading
+            overallBalanceQuery.isLoading
               ? t.common.loading
               : formatCurrency(overallBalance, locale, currency)
           }

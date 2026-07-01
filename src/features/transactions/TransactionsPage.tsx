@@ -73,6 +73,9 @@ export function TransactionsPage() {
         queryKey: ["accounts"],
       }),
       queryClient.invalidateQueries({
+        queryKey: ["overall-balance"],
+      }),
+      queryClient.invalidateQueries({
         queryKey: ["monthly-summary"],
       }),
     ]);
