@@ -8,6 +8,12 @@ export const languages: { label: string; value: Language }[] = [
 export const translations = {
   en: {
     language: "Language",
+    theme: {
+      label: "Theme",
+      system: "System",
+      light: "Light",
+      dark: "Dark",
+    },
     personalFinance: "Personal finance",
     user: "User",
     logout: "Logout",
@@ -198,6 +204,12 @@ export const translations = {
   },
   "pt-BR": {
     language: "Idioma",
+    theme: {
+      label: "Tema",
+      system: "Sistema",
+      light: "Claro",
+      dark: "Escuro",
+    },
     personalFinance: "Finanças pessoais",
     user: "Usuário",
     logout: "Sair",

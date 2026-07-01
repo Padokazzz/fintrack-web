@@ -2,6 +2,7 @@ import { LogOut, Menu } from "lucide-react";
 import { useAuth } from "../../features/auth/use-auth";
 import { useLanguage } from "../../lib/i18n/useLanguage";
 import { LanguageSelect } from "./LanguageSelect";
+import { ThemeSelect } from "./ThemeSelect";
 
 type HeaderProps = {
   onMenuClick: () => void;
@@ -32,6 +33,7 @@ export function Header({ onMenuClick }: HeaderProps) {
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
+        <ThemeSelect />
         <LanguageSelect />
 
         <button
