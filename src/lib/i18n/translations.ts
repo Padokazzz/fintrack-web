@@ -169,6 +169,10 @@ export const translations = {
         "Review your financial results for a selected period.",
       loadSummaryError: "Could not load the monthly summary.",
       loadTransactionsError: "Could not load transactions for this period.",
+      loadAccountsError: "Could not load the overall balance.",
+      overallBalance: "Overall balance",
+      overallBalanceDescription:
+        "Total available across all accounts, including previous months",
       totalIncome: "Total income",
       totalExpenses: "Total expenses",
       incomeThisMonth: "Total income this month",
@@ -370,6 +374,10 @@ export const translations = {
       loadSummaryError: "Não foi possível carregar o resumo mensal.",
       loadTransactionsError:
         "Não foi possível carregar as transações deste período.",
+      loadAccountsError: "Não foi possível carregar o saldo geral.",
+      overallBalance: "Saldo geral",
+      overallBalanceDescription:
+        "Total disponível em todas as contas, incluindo meses anteriores",
       totalIncome: "Total de receitas",
       totalExpenses: "Total de despesas",
       incomeThisMonth: "Receitas totais deste mês",
