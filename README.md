@@ -1,126 +1,88 @@
-> **Frontend do projeto FinTrack** · [Backend ASP.NET Core](https://github.com/Padokazzz/FinTrack)
->
-> Interface web para gestão financeira pessoal. Consome uma API REST própria e reúne autenticação, contas, categorias, transações e resumo mensal em uma aplicação React organizada por funcionalidades.
->
-> **Stack:** React · TypeScript · Vite · TanStack Query · React Hook Form · Zod · Axios · Tailwind CSS
 # FinTrack Web
 
-Frontend da FinTrack, uma aplicação de gestão financeira pessoal criada com React e TypeScript. O projeto consome a FinTrack API e oferece uma interface para autenticação, gerenciamento de contas, categorias, transações e acompanhamento do resumo financeiro mensal.
+Frontend de uma aplicação de gestão financeira pessoal, desenvolvido com **React e TypeScript**. A interface consome a [FinTrack API](https://github.com/Padokazzz/FinTrack), permitindo que usuários organizem contas, categorias e transações e acompanhem um resumo financeiro mensal.
 
-Este repositório faz parte de um projeto full stack pensado para portfólio, com foco em boas práticas, organização por funcionalidades, experiência de usuário clara e integração com uma API REST real.
+O objetivo do projeto é construir uma experiência de uso completa em torno de uma API própria, com componentes reutilizáveis, formulários validados, gerenciamento de estado remoto e tratamento consistente dos estados da interface.
 
-## Preview
-
-![FinTrack Web Dashboard](docs/images/dashboard-preview.png)
+![Prévia do dashboard FinTrack](docs/images/dashboard-preview.png)
 
 ## Funcionalidades
 
-- Cadastro de usuário
-- Login com autenticação via JWT
-- Dashboard com visão mensal
-- CRUD de contas financeiras
-- CRUD de categorias
-- CRUD de transações
-- Filtros de transações por mês, ano, tipo e categoria
-- Relatório mensal com receitas, despesas e saldo final
-- Estados de loading, erro e empty state
-- Layout autenticado com menu lateral
-- Integração com backend ASP.NET Core
+- Cadastro e login com autenticação JWT.
+- Dashboard com resumo financeiro mensal.
+- Gerenciamento de contas e categorias.
+- Criação, edição, consulta e remoção de transações.
+- Filtros por mês, ano, tipo e categoria.
+- Formulários com validação.
+- Estados de carregamento, erro e ausência de dados.
+- Área autenticada com navegação lateral.
 
 ## Stack
 
-- React
-- TypeScript
-- Vite
-- React Router
-- TanStack Query
-- React Hook Form
-- Zod
-- Axios
-- Tailwind CSS
-- Recharts
-- Lucide React
-- ESLint
+| Responsabilidade | Tecnologias |
+| --- | --- |
+| Interface | React · TypeScript · Vite |
+| Rotas | React Router |
+| Estado remoto | TanStack Query |
+| Formulários | React Hook Form · Zod |
+| HTTP | Axios |
+| Estilização | Tailwind CSS |
+| Visualização de dados | Recharts |
+| Ícones | Lucide React |
+| Qualidade | ESLint |
 
-## Arquitetura do frontend
+## Organização do código
 
-O projeto foi organizado por responsabilidade, mantendo a aplicação fácil de crescer sem virar uma estrutura exagerada.
+A estrutura é organizada por funcionalidades. Cada domínio mantém próximo o que pertence a ele, enquanto componentes e utilitários compartilhados ficam em diretórios próprios.
 
 ```text
 src/
-  app/
-    providers.tsx
-    routes.tsx
-  components/
-    layout/
-    ui/
-  features/
-    accounts/
-    auth/
-    categories/
-    summaries/
-    transactions/
-  lib/
-    api.ts
-    api-error.ts
-    auth-storage.ts
-    formatters.ts
+├── app/
+│   ├── providers.tsx
+│   └── routes.tsx
+├── components/
+│   ├── layout/
+│   └── ui/
+├── features/
+│   ├── accounts/
+│   ├── auth/
+│   ├── categories/
+│   ├── summaries/
+│   └── transactions/
+└── lib/
+    ├── api.ts
+    ├── api-error.ts
+    ├── auth-storage.ts
+    └── formatters.ts
 ```
 
-### Principais decisões
+### Decisões de implementação
 
-- `features/`: agrupa telas, serviços, tipos, schemas e componentes de cada domínio.
-- `components/ui/`: componentes reutilizáveis e neutros, como alertas e empty states.
-- `components/layout/`: estrutura visual compartilhada, como sidebar, header e layout autenticado.
-- `lib/`: integrações e utilitários globais, como Axios, storage de token e formatadores.
-- TanStack Query centraliza cache, loading, erro e atualização dos dados vindos da API.
-- React Hook Form com Zod mantém os formulários performáticos e validados no frontend.
+- **Organização por domínio:** telas, serviços, tipos, schemas e componentes relacionados ficam agrupados por funcionalidade.
+- **TanStack Query:** gerencia cache, carregamento, erros e atualização dos dados remotos.
+- **React Hook Form + Zod:** combina gerenciamento de formulários e validação de dados.
+- **Axios:** centraliza a comunicação HTTP com a API.
+- **Componentes compartilhados:** elementos de interface e layout são reutilizados sem acoplar as funcionalidades entre si.
 
-## Requisitos
+## Integração com o backend
 
-Antes de rodar o frontend, você precisa ter instalado:
+Este frontend depende da [FinTrack API](https://github.com/Padokazzz/FinTrack).
 
-- Node.js
-- npm
-- Git
-- FinTrack API rodando localmente
-
-Versão utilizada durante o desenvolvimento:
-
-```bash
-node --version
-npm --version
-```
-
-## Integração com a API
-
-Este frontend depende da FinTrack API.
-
-Por padrão, o frontend espera que a API esteja disponível em:
+A URL base padrão esperada é:
 
 ```text
 http://localhost:8080/api
 ```
 
-Se você estiver rodando a API em outra porta, ajuste a variável `VITE_API_BASE_URL`.
+Se a API estiver em outro endereço, configure `VITE_API_BASE_URL` no ambiente do frontend.
 
-## Variáveis de ambiente
+## Executar localmente
 
-Crie um arquivo `.env` na raiz do projeto:
+### Pré-requisitos
 
-```bash
-cp .env.example .env
-```
-
-Exemplo:
-
-```env
-VITE_API_BASE_URL=http://localhost:8080/api
-```
-
-Importante: o arquivo `.env` não deve ser versionado, pois pode conter configurações locais ou sensíveis.
-
-## Como rodar localmente
+- Node.js e npm.
+- Git.
+- FinTrack API em execução.
 
 Clone o repositório:
 
@@ -129,142 +91,72 @@ git clone https://github.com/Padokazzz/fintrack-web.git
 cd fintrack-web
 ```
 
-Instale as dependências:
+Instale as dependências e configure o ambiente:
 
 ```bash
 npm install
-```
-
-Configure as variáveis de ambiente:
-
-```bash
 cp .env.example .env
 ```
 
-Inicie a aplicação:
+No arquivo `.env`, informe a URL da API:
+
+```env
+VITE_API_BASE_URL=http://localhost:8080/api
+```
+
+Inicie o servidor de desenvolvimento:
 
 ```bash
 npm run dev
 ```
 
-Acesse no navegador:
+A aplicação ficará disponível em `http://localhost:5173`.
 
-```text
-http://localhost:5173
-```
+Em outro terminal, inicie a API seguindo as instruções do [README do backend](https://github.com/Padokazzz/FinTrack).
 
-## Como rodar com a API
+## Scripts
 
-Em outro terminal, suba a FinTrack API.
+| Comando | Descrição |
+| --- | --- |
+| `npm run dev` | Inicia o servidor de desenvolvimento. |
+| `npm run build` | Gera a build de produção. |
+| `npm run lint` | Executa o ESLint. |
+| `npm run preview` | Pré-visualiza a build localmente. |
 
-Exemplo usando Docker no repositório do backend:
-
-```bash
-docker compose up --build
-```
-
-Depois, confirme se o Swagger da API está disponível:
-
-```text
-http://localhost:8080/swagger
-```
-
-Com a API rodando, volte ao frontend e acesse:
-
-```text
-http://localhost:5173
-```
-
-## Scripts disponíveis
-
-Rodar em desenvolvimento:
-
-```bash
-npm run dev
-```
-
-Gerar build de produção:
-
-```bash
-npm run build
-```
-
-Executar lint:
-
-```bash
-npm run lint
-```
-
-Pré-visualizar build local:
-
-```bash
-npm run preview
-```
-
-## Fluxo principal da aplicação
-
-1. O usuário cria uma conta ou faz login.
-2. O token JWT é salvo localmente.
-3. O Axios envia o token nas chamadas autenticadas.
-4. O usuário cadastra contas financeiras.
-5. O usuário cadastra categorias de receita e despesa.
-6. O usuário registra transações vinculadas a uma conta e categoria.
-7. O dashboard e o relatório mensal exibem o resumo financeiro.
-
-## Validações
-
-Os formulários usam Zod integrado ao React Hook Form.
-
-Exemplos de validação:
-
-- Email obrigatório e válido
-- Senha obrigatória
-- Nome obrigatório
-- Valor da transação maior que zero
-- Conta obrigatória para transações
-- Categoria obrigatória para transações
-- Tipo de transação compatível com categoria
-
-## Tratamento de erros
-
-A aplicação possui tratamento visual para:
-
-- Erro de login
-- Erro de cadastro
-- Falha ao carregar dados
-- Falha ao criar, editar ou remover registros
-- Sessão expirada ou token inválido
-- Listas vazias
-
-Quando a API retorna `401 Unauthorized`, o token local é removido e o usuário é redirecionado para o login.
-
-## Build
-
-Para validar se o projeto está pronto para produção:
+Validação local recomendada antes de publicar alterações:
 
 ```bash
 npm run lint
 npm run build
 ```
 
-Observação: dependendo do tamanho das dependências, o Vite pode exibir um aviso sobre chunks maiores que 500 kB. Isso não impede o build. Uma melhoria futura é aplicar code splitting com `lazy` e `Suspense`.
+## Fluxo principal
 
-## Roadmap
+1. O usuário cria uma conta ou realiza login.
+2. A aplicação utiliza o token JWT nas chamadas autenticadas.
+3. O usuário cadastra contas financeiras e categorias.
+4. As transações são registradas e associadas aos recursos correspondentes.
+5. O dashboard consulta os dados e apresenta o resumo do período.
 
-- Adicionar testes de componentes
-- Adicionar testes de integração com mocks de API
-- Aplicar lazy loading nas rotas
-- Adicionar tela de perfil do usuário
-- Melhorar responsividade mobile do menu lateral
-- Adicionar gráficos por categoria
-- Criar Dockerfile para o frontend
-- Publicar em ambiente cloud
+## Tratamento de estados e validações
 
-## Repositórios relacionados
+Os formulários utilizam Zod integrado ao React Hook Form para validar os dados antes do envio. A interface também contempla estados de carregamento, listas vazias e falhas nas operações.
 
-- Backend: `fintrack-api`
-- Frontend: `fintrack-web`
+Quando a API retorna `401 Unauthorized`, a sessão local é invalidada e o usuário é direcionado ao fluxo de autenticação.
 
-## Autor
+## Próximas melhorias
 
-Desenvolvido por Leonardo como projeto full stack para estudo, prática profissional e portfólio.
+- [ ] Adicionar testes de componentes.
+- [ ] Criar testes de integração para fluxos com a API.
+- [ ] Aplicar carregamento sob demanda nas rotas.
+- [ ] Evoluir a experiência em dispositivos móveis.
+- [ ] Ampliar os gráficos e filtros do dashboard.
+- [ ] Preparar imagem Docker para o frontend.
+
+## Projeto relacionado
+
+- [FinTrack API](https://github.com/Padokazzz/FinTrack): backend em ASP.NET Core e PostgreSQL.
+
+---
+
+Desenvolvido por [Leonardo Padilha](https://www.leonardopadilha.com).
