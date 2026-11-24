@@ -1,3 +1,8 @@
+> **Frontend do projeto FinTrack** · [Backend ASP.NET Core](https://github.com/Padokazzz/FinTrack)
+>
+> Interface web para gestão financeira pessoal. Consome uma API REST própria e reúne autenticação, contas, categorias, transações e resumo mensal em uma aplicação React organizada por funcionalidades.
+>
+> **Stack:** React · TypeScript · Vite · TanStack Query · React Hook Form · Zod · Axios · Tailwind CSS
 # FinTrack Web
 
 Frontend da FinTrack, uma aplicação de gestão financeira pessoal criada com React e TypeScript. O projeto consome a FinTrack API e oferece uma interface para autenticação, gerenciamento de contas, categorias, transações e acompanhamento do resumo financeiro mensal.
