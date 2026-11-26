@@ -3,6 +3,7 @@ import { Download } from "lucide-react";
 import { useState } from "react";
 import { Alert } from "../../../components/ui/Alert";
 import { formatCurrency } from "../../../lib/formatters";
+import { isNativeMobile } from "../../../lib/platform/desktop";
 import { useLanguage } from "../../../lib/i18n/useLanguage";
 import { getCategoryTotals, downloadTransactions } from "../summaries-service";
 
@@ -30,10 +31,10 @@ export function CategoryReport({ month, year }: { month: number; year: number })
               <option value={1}>{labels.income}</option>
             </select>
           </label>
-          <button type="button" onClick={() => download.mutate()} disabled={download.isPending}
+          {!isNativeMobile && <button type="button" onClick={() => download.mutate()} disabled={download.isPending}
             className="inline-flex h-10 items-center gap-2 rounded-md border border-slate-300 px-3 text-sm font-medium disabled:opacity-50">
             <Download className="h-4 w-4" /> {labels.export}
-          </button>
+          </button>}
         </div>
       </div>
       {download.isError && <Alert variant="error">{labels.exportError}</Alert>}

@@ -2,6 +2,10 @@ import { invoke, isTauri } from "@tauri-apps/api/core";
 import axios, { AxiosError, AxiosHeaders, type AxiosAdapter } from "axios";
 
 export const isDesktop = isTauri();
+export const isNativeMobile = isDesktop && (
+  /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+);
 export const desktopApiBase = "https://fintrack.invalid/api";
 
 interface NativeResponse {

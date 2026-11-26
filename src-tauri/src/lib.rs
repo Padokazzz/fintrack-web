@@ -37,6 +37,9 @@ async fn save_csv(
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let builder = tauri::Builder::default().setup(|app| {
+        #[cfg(mobile)]
+        let origin = option_env!("FINTRACK_MOBILE_API_URL").unwrap_or("http://127.0.0.1:8080");
+        #[cfg(not(mobile))]
         let origin = option_env!("FINTRACK_DESKTOP_API_URL").unwrap_or("http://127.0.0.1:8080");
         app.manage(transport::Api::new(origin)?);
         Ok(())

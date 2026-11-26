@@ -215,3 +215,33 @@ FINTRACK_DESKTOP_TEST_API_URL=http://127.0.0.1:8080 cargo test refresh_and_expor
 A primeira validação tem como alvo o macOS. O app precisa alcançar a API para
 consultar ou registrar dados. A conexão e o salvamento nativos ficam separados
 das telas, que são compartilhadas com a versão web.
+
+## Android e iOS
+
+O app mobile usa Tauri 2, as mesmas telas React e a mesma API do site.
+A exportação CSV está disponível no site e no desktop.
+
+Para configurar o ambiente, siga os [pré-requisitos do Tauri](https://v2.tauri.app/start/prerequisites/).
+O projeto Android usa SDK 36 e NDK. O iOS requer macOS, Xcode, CocoaPods e XcodeGen.
+
+```bash
+npm ci
+npm run android:dev
+npm run ios:dev
+```
+
+Sem configuração, o app mobile procura a API em `http://127.0.0.1:8080`.
+Para um Android conectado ao computador, encaminhe a porta com `adb reverse tcp:8080 tcp:8080`.
+O simulador iOS pode usar a API local do Mac. Para celulares fora desse ambiente,
+defina `FINTRACK_MOBILE_API_URL` com a origem HTTPS da API antes de compilar, sem
+o sufixo `/api`. Essa origem é definida no build nativo e vale para todas as requisições.
+
+```bash
+FINTRACK_MOBILE_API_URL=https://api.example.com npm run android:build -- --debug --apk
+FINTRACK_MOBILE_API_URL=https://api.example.com npm run ios:build
+```
+
+O comando Android acima gera um APK de teste. Para distribuir, configure a
+assinatura Android e gere um AAB com `npm run android:build -- --aab`.
+Para um build iOS em aparelho físico ou distribuição, configure a equipe e o
+provisionamento da Apple no Xcode.
