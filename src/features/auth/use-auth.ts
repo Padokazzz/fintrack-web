@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { saveToken, removeToken } from "../../lib/auth-storage";
+import { useQueryClient } from "@tanstack/react-query";
+import { revokeSession } from "../../lib/api";
+import { saveToken } from "../../lib/auth-storage";
 import type { AuthResponse } from "./types";
 
 const USER_KEY = "fintrack_user";
@@ -35,15 +37,18 @@ export function removeUser() {
 
 export function useAuth() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   function handleLoginSuccess(response: AuthResponse) {
+    queryClient.clear();
     saveToken(response.token);
     saveUser(response);
     navigate("/dashboard");
   }
 
-  function logout() {
-    removeToken();
+  async function logout() {
+    await revokeSession();
+    queryClient.clear();
     removeUser();
     navigate("/login");
   }

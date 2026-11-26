@@ -1,4 +1,5 @@
 import { UpcomingRecurrences } from "../recurrences/UpcomingRecurrences";
+import { CategoryReport } from "./components/CategoryReport";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Alert } from "../../components/ui/Alert";
@@ -147,6 +148,7 @@ export function DashboardPage() {
           isLoading={transactionsQuery.isLoading}
         />
       </section>
+      <CategoryReport month={month} year={year} />
       <UpcomingRecurrences />
     </div>
   );

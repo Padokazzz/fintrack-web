@@ -16,6 +16,7 @@ O objetivo do projeto é construir uma experiência de uso completa em torno de 
 - Filtros por mês, ano, tipo e categoria.
 - Históricos de transações e transferências paginados pela API.
 - Agenda de recorrências mensais e projeção de saldo por conta.
+- Detalhamento de despesas e receitas por categoria, com exportação mensal em CSV.
 - Formulários com validação.
 - Estados de carregamento, erro e ausência de dados.
 - Área autenticada com navegação lateral.
@@ -124,14 +125,16 @@ Em outro terminal, inicie a API seguindo as instruções do [README do backend](
 | --- | --- |
 | `npm run dev` | Inicia o servidor de desenvolvimento. |
 | `npm run build` | Gera a build de produção. |
+| `npm test` | Executa testes de componentes e dos fluxos HTTP simulados. |
 | `npm run lint` | Executa o ESLint. |
 | `npm run preview` | Pré-visualiza a build localmente. |
 
-O GitHub Actions roda a instalação pelo lockfile, o lint e o build em pull requests para a `main`. Para repetir as verificações localmente:
+O GitHub Actions roda a instalação pelo lockfile, o lint, os testes, o build e a montagem da imagem Docker em pull requests para a `main`. Para repetir as verificações localmente:
 
 ```bash
 npm ci
 npm run lint
+npm test
 npm run build
 ```
 
@@ -143,6 +146,17 @@ npm run build
 4. As transações são registradas e associadas aos recursos correspondentes.
 5. O dashboard consulta os dados e apresenta o resumo do período.
 
+## Executar com Docker
+
+Com a API rodando na porta 8080, construa a imagem e publique o frontend na porta 3000.
+
+```bash
+docker build -t fintrack-web .
+docker run --rm -p 3000:80 fintrack-web
+```
+
+A imagem usa Nginx para servir as rotas do React e encaminhar `/api` para `http://host.docker.internal:8080`. Use `-e FINTRACK_API_UPSTREAM=http://outro-host:8080` para ajustar o destino. Em Docker Engine no Linux, acrescente `--add-host=host.docker.internal:host-gateway` se usar o destino padrão.
+
 ## Recorrências
 
 Em **Recorrências**, selecione **Nova recorrência**, vincule uma conta e uma categoria e informe a primeira data. Para salário ou débito fixo, escolha **Registrar automaticamente** e informe o valor. Para contas variáveis, escolha **Confirmar manualmente** e preencha o valor real quando a ocorrência aparecer na agenda.
@@ -153,16 +167,16 @@ O dashboard mostra os próximos lançamentos. A agenda mostra os saldos projetad
 
 Os formulários utilizam Zod integrado ao React Hook Form para validar os dados antes do envio. A interface também contempla estados de carregamento, listas vazias e falhas nas operações.
 
-Quando a API retorna `401 Unauthorized`, a sessão local é invalidada e o usuário é direcionado ao fluxo de autenticação.
+Quando um JWT expira, o frontend tenta renovar a sessão por cookie HttpOnly e repetir a requisição uma vez. Se a renovação for recusada, o usuário volta ao login.
 
 ## Próximas melhorias
 
-- [ ] Adicionar testes de componentes.
-- [ ] Criar testes de integração para fluxos com a API.
+- [x] Adicionar testes de componentes.
+- [x] Criar testes de integração para fluxos com a API.
 - [x] Aplicar carregamento sob demanda nas rotas.
-- [ ] Evoluir a experiência em dispositivos móveis.
-- [ ] Ampliar os gráficos e filtros do dashboard.
-- [ ] Preparar imagem Docker para o frontend.
+- [x] Evoluir a experiência em dispositivos móveis.
+- [x] Ampliar os gráficos e filtros do dashboard.
+- [x] Preparar imagem Docker para o frontend.
 
 ## Projeto relacionado
 

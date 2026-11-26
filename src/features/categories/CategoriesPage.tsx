@@ -31,6 +31,7 @@ export function CategoriesPage() {
     mutationFn: createCategory,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ["category-totals"] });
       setIsFormOpen(false);
     },
   });
@@ -40,6 +41,7 @@ export function CategoriesPage() {
       updateCategory(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ["category-totals"] });
       setEditingCategory(null);
     },
   });
@@ -48,6 +50,7 @@ export function CategoriesPage() {
     mutationFn: deleteCategory,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ["category-totals"] });
     },
   });
 
