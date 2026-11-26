@@ -1,0 +1,462 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		19DD564B434B27E8D4895759 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 154CB1C9FD28768DAE207F70 /* Assets.xcassets */; };
+		30400D16251F40388C2A6771 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C5908E1DC5721924D2C5B5F /* LaunchScreen.storyboard */; };
+		5836E57DDD395187C3D8785A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DF60A239CC2DD01AFF334FD /* CoreGraphics.framework */; };
+		5E9ADBE84BC48DC57450AFD6 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = DBBF9CFE1605D8790C65F0D2 /* main.mm */; };
+		6CF5C5B5253F706C08FFE7BA /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FFDE31733B3645C695295 /* Metal.framework */; };
+		6F555F32250BA568CEDA1AAC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44CB71073BD573EA3B2EDD66 /* QuartzCore.framework */; };
+		87D370FF6B388A76AFC47311 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEC44647B82B6A1D79DE5AE9 /* Security.framework */; };
+		96F472F04397F872ED045BD3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EAD3F0B84734DBF563C5DE7 /* UIKit.framework */; };
+		9BD086504C45934E27A37570 /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A802053BA32ED72E23F1669 /* libapp.a */; };
+		A6F0CCFD181AB7570AFC2A99 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26375BEAB5951E534C80FB7F /* WebKit.framework */; };
+		CE03FA83E4E22EFA45F9F3EE /* assets in Resources */ = {isa = PBXBuildFile; fileRef = A764F0FEF343535B68D283BC /* assets */; };
+		E5085502A635EBB43C036339 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD42F8174FFE46E066C1493 /* MetalKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0605073990E59AADE5EAD2CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		074F690EF554C3AFC7351974 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
+		139FFDE31733B3645C695295 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		154CB1C9FD28768DAE207F70 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		26375BEAB5951E534C80FB7F /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		29250447C17C13A69C2D2A6A /* transport.rs */ = {isa = PBXFileReference; path = transport.rs; sourceTree = "<group>"; };
+		2AE22A2EF1E16F5BD9E10465 /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
+		3C5908E1DC5721924D2C5B5F /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		41081D22EABA7F35547061B2 /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
+		44CB71073BD573EA3B2EDD66 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		46C44542FDEDC20CE7CE90D9 /* fintrack-desktop_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "fintrack-desktop_iOS.entitlements"; sourceTree = "<group>"; };
+		4DF60A239CC2DD01AFF334FD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		9A802053BA32ED72E23F1669 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		9EAD3F0B84734DBF563C5DE7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		A5783D5EFA3FAD6CCF8FAF79 /* fintrack-desktop_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "fintrack-desktop_iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A764F0FEF343535B68D283BC /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		BEC44647B82B6A1D79DE5AE9 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		CCD42F8174FFE46E066C1493 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		DBBF9CFE1605D8790C65F0D2 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		428FE0C140A08996B637340F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9BD086504C45934E27A37570 /* libapp.a in Frameworks */,
+				5836E57DDD395187C3D8785A /* CoreGraphics.framework in Frameworks */,
+				6CF5C5B5253F706C08FFE7BA /* Metal.framework in Frameworks */,
+				E5085502A635EBB43C036339 /* MetalKit.framework in Frameworks */,
+				6F555F32250BA568CEDA1AAC /* QuartzCore.framework in Frameworks */,
+				87D370FF6B388A76AFC47311 /* Security.framework in Frameworks */,
+				96F472F04397F872ED045BD3 /* UIKit.framework in Frameworks */,
+				A6F0CCFD181AB7570AFC2A99 /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		14585F28974534643C8DDA78 /* fintrack-desktop_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				46C44542FDEDC20CE7CE90D9 /* fintrack-desktop_iOS.entitlements */,
+				0605073990E59AADE5EAD2CB /* Info.plist */,
+			);
+			path = "fintrack-desktop_iOS";
+			sourceTree = "<group>";
+		};
+		239B1B6D94CAD9DEEA2CFB4E /* src */ = {
+			isa = PBXGroup;
+			children = (
+				2AE22A2EF1E16F5BD9E10465 /* lib.rs */,
+				41081D22EABA7F35547061B2 /* main.rs */,
+				29250447C17C13A69C2D2A6A /* transport.rs */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+		3D2FF0027E93D90852F7B209 = {
+			isa = PBXGroup;
+			children = (
+				A764F0FEF343535B68D283BC /* assets */,
+				154CB1C9FD28768DAE207F70 /* Assets.xcassets */,
+				3C5908E1DC5721924D2C5B5F /* LaunchScreen.storyboard */,
+				6AEEC60ADFB405ABEB31A20C /* Externals */,
+				14585F28974534643C8DDA78 /* fintrack-desktop_iOS */,
+				655F1E4247C7F011E76DEBF7 /* Sources */,
+				239B1B6D94CAD9DEEA2CFB4E /* src */,
+				D9AC8A5EBF77927E7AE4BAFA /* Frameworks */,
+				8CDAB541841150C31D9F667B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		55A2CB6B2763F8BDE335BF6A /* bindings */ = {
+			isa = PBXGroup;
+			children = (
+				074F690EF554C3AFC7351974 /* bindings.h */,
+			);
+			path = bindings;
+			sourceTree = "<group>";
+		};
+		655F1E4247C7F011E76DEBF7 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				C9150673E5695B49CC873CF1 /* fintrack-desktop */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		6AEEC60ADFB405ABEB31A20C /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		8CDAB541841150C31D9F667B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A5783D5EFA3FAD6CCF8FAF79 /* fintrack-desktop_iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C9150673E5695B49CC873CF1 /* fintrack-desktop */ = {
+			isa = PBXGroup;
+			children = (
+				DBBF9CFE1605D8790C65F0D2 /* main.mm */,
+				55A2CB6B2763F8BDE335BF6A /* bindings */,
+			);
+			path = "fintrack-desktop";
+			sourceTree = "<group>";
+		};
+		D9AC8A5EBF77927E7AE4BAFA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4DF60A239CC2DD01AFF334FD /* CoreGraphics.framework */,
+				9A802053BA32ED72E23F1669 /* libapp.a */,
+				139FFDE31733B3645C695295 /* Metal.framework */,
+				CCD42F8174FFE46E066C1493 /* MetalKit.framework */,
+				44CB71073BD573EA3B2EDD66 /* QuartzCore.framework */,
+				BEC44647B82B6A1D79DE5AE9 /* Security.framework */,
+				9EAD3F0B84734DBF563C5DE7 /* UIKit.framework */,
+				26375BEAB5951E534C80FB7F /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7CFEBE12869A8142CF170DD0 /* fintrack-desktop_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B3D000585E26603A4EFDDF6 /* Build configuration list for PBXNativeTarget "fintrack-desktop_iOS" */;
+			buildPhases = (
+				A3306BE422120C663977CB40 /* Build Rust Code */,
+				A7A36FC04704D5F4C467A04A /* Sources */,
+				ABB1E2476D8CA829925D00DD /* Resources */,
+				428FE0C140A08996B637340F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "fintrack-desktop_iOS";
+			packageProductDependencies = (
+			);
+			productName = "fintrack-desktop_iOS";
+			productReference = A5783D5EFA3FAD6CCF8FAF79 /* fintrack-desktop_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D28EF8ADA7B29A9EB12673EC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = B437CB81C14C3601B4692343 /* Build configuration list for PBXProject "fintrack-desktop" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 3D2FF0027E93D90852F7B209;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 8CDAB541841150C31D9F667B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7CFEBE12869A8142CF170DD0 /* fintrack-desktop_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		ABB1E2476D8CA829925D00DD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19DD564B434B27E8D4895759 /* Assets.xcassets in Resources */,
+				30400D16251F40388C2A6771 /* LaunchScreen.storyboard in Resources */,
+				CE03FA83E4E22EFA45F9F3EE /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A3306BE422120C663977CB40 /* Build Rust Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "node \"${SRCROOT}/../../../node_modules/@tauri-apps/cli/tauri.js\" ios xcode-script -v --platform \"${PLATFORM_DISPLAY_NAME:?}\" --sdk-root \"${SDKROOT:?}\" --framework-search-paths \"${FRAMEWORK_SEARCH_PATHS:?}\" --header-search-paths \"${HEADER_SEARCH_PATHS:?}\" --gcc-preprocessor-definitions \"${GCC_PREPROCESSOR_DEFINITIONS:-}\" --configuration \"${CONFIGURATION:?}\" ${FORCE_COLOR} ${ARCHS:?}\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A7A36FC04704D5F4C467A04A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5E9ADBE84BC48DC57450AFD6 /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		629173E092190120ED1D7754 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = debug;
+		};
+		8C59CF8D5E047D7CD8405C01 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "fintrack-desktop_iOS/fintrack-desktop_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "fintrack-desktop_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.leonardopadilha.fintrack;
+				PRODUCT_NAME = "FinTrack";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = debug;
+		};
+		C4D6F49A940672506E18228F /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "fintrack-desktop_iOS/fintrack-desktop_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "fintrack-desktop_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.leonardopadilha.fintrack;
+				PRODUCT_NAME = "FinTrack";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = release;
+		};
+		F135279A372A8526BF62BC42 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4B3D000585E26603A4EFDDF6 /* Build configuration list for PBXNativeTarget "fintrack-desktop_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C59CF8D5E047D7CD8405C01 /* debug */,
+				C4D6F49A940672506E18228F /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+		B437CB81C14C3601B4692343 /* Build configuration list for PBXProject "fintrack-desktop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				629173E092190120ED1D7754 /* debug */,
+				F135279A372A8526BF62BC42 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D28EF8ADA7B29A9EB12673EC /* Project object */;
+}
