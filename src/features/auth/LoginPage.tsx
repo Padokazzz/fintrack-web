@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { Alert } from "../../components/ui/Alert";
 import { AuthShell } from "../../components/ui/AuthShell";
+import { getApiErrorMessage } from "../../lib/api-error";
 import { useLanguage } from "../../lib/i18n/useLanguage";
 import { loginUser } from "./auth-service";
 import { createLoginSchema, type LoginFormData } from "./auth-schemas";
@@ -71,7 +72,9 @@ export function LoginPage() {
         </div>
 
         {loginMutation.isError && (
-          <Alert variant="error">{t.auth.invalidCredentials}</Alert>
+          <Alert variant="error">
+            {getApiErrorMessage(loginMutation.error, t.auth.invalidCredentials, t.auth.apiUnavailable)}
+          </Alert>
         )}
 
         <button

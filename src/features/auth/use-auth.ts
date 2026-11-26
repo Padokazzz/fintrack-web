@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { revokeSession } from "../../lib/api";
-import { saveToken } from "../../lib/auth-storage";
+import { getSessionStorage, saveToken } from "../../lib/auth-storage";
 import type { AuthResponse } from "./types";
 
 const USER_KEY = "fintrack_user";
 
 export function saveUser(user: AuthResponse) {
-  localStorage.setItem(
+  getSessionStorage().setItem(
     USER_KEY,
     JSON.stringify({
       userId: user.userId,
@@ -18,7 +18,7 @@ export function saveUser(user: AuthResponse) {
 }
 
 export function getUser() {
-  const user = localStorage.getItem(USER_KEY);
+  const user = getSessionStorage().getItem(USER_KEY);
 
   if (!user) {
     return null;
@@ -32,7 +32,7 @@ export function getUser() {
 }
 
 export function removeUser() {
-  localStorage.removeItem(USER_KEY);
+  getSessionStorage().removeItem(USER_KEY);
 }
 
 export function useAuth() {
