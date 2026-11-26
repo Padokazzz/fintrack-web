@@ -12,6 +12,7 @@ O objetivo do projeto é construir uma experiência de uso completa em torno de 
 - Dashboard com resumo financeiro mensal.
 - Gerenciamento de contas e categorias.
 - Criação, edição, consulta e remoção de transações.
+- Criação, consulta e reversão de transferências entre contas.
 - Filtros por mês, ano, tipo e categoria.
 - Formulários com validação.
 - Estados de carregamento, erro e ausência de dados.
@@ -48,7 +49,8 @@ src/
 │   ├── auth/
 │   ├── categories/
 │   ├── summaries/
-│   └── transactions/
+│   ├── transactions/
+│   └── transfers/
 └── lib/
     ├── api.ts
     ├── api-error.ts
@@ -148,7 +150,7 @@ Quando a API retorna `401 Unauthorized`, a sessão local é invalidada e o usuá
 
 - [ ] Adicionar testes de componentes.
 - [ ] Criar testes de integração para fluxos com a API.
-- [ ] Aplicar carregamento sob demanda nas rotas.
+- [x] Aplicar carregamento sob demanda nas rotas.
 - [ ] Evoluir a experiência em dispositivos móveis.
 - [ ] Ampliar os gráficos e filtros do dashboard.
 - [ ] Preparar imagem Docker para o frontend.

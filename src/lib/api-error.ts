@@ -3,7 +3,7 @@ import axios from "axios";
 type ApiErrorResponse = {
   message?: string;
   title?: string;
-  errors?: Record<string, string[]>;
+  errors?: { message: string }[] | Record<string, string[]>;
 };
 
 export function getApiErrorMessage(
@@ -16,6 +16,15 @@ export function getApiErrorMessage(
 
   const data = error.response?.data;
 
+  const errors = data?.errors;
+  const firstValidationError = Array.isArray(errors)
+    ? errors[0]?.message
+    : Object.values(errors ?? {}).flat()[0];
+
+  if (firstValidationError) {
+    return firstValidationError;
+  }
+
   if (data?.message) {
     return data.message;
   }
@@ -24,9 +33,5 @@ export function getApiErrorMessage(
     return data.title;
   }
 
-  const firstValidationError = data?.errors
-    ? Object.values(data.errors).flat()[0]
-    : undefined;
-
-  return firstValidationError ?? fallbackMessage;
+  return fallbackMessage;
 }

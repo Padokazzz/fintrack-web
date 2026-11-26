@@ -2,6 +2,7 @@ import {
   ArrowLeftRight,
   ChartNoAxesCombined,
   LayoutDashboard,
+  Repeat2,
   X,
   Tags,
   Wallet,
@@ -29,6 +30,11 @@ const navItems = [
     labelKey: "transactions",
     to: "/transactions",
     icon: ArrowLeftRight,
+  },
+  {
+    labelKey: "transfers",
+    to: "/transfers",
+    icon: Repeat2,
   },
   {
     labelKey: "reports",

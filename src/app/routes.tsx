@@ -9,6 +9,7 @@ import {
   MonthlySummaryRoute,
   RegisterRoute,
   TransactionsRoute,
+  TransfersRoute,
 } from "./lazy-pages";
 
 export const router = createBrowserRouter([
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
           {
             path: "/transactions",
             element: <TransactionsRoute />,
+          },
+          {
+            path: "/transfers",
+            element: <TransfersRoute />,
           },
           {
             path: "/reports/monthly-summary",
