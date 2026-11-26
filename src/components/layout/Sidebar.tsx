@@ -1,6 +1,7 @@
 import {
   ArrowLeftRight,
   ChartNoAxesCombined,
+  CalendarDays,
   LayoutDashboard,
   Repeat2,
   X,
@@ -35,6 +36,11 @@ const navItems = [
     labelKey: "transfers",
     to: "/transfers",
     icon: Repeat2,
+  },
+  {
+    labelKey: "recurrences",
+    to: "/recurrences",
+    icon: CalendarDays,
   },
   {
     labelKey: "reports",

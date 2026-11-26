@@ -8,6 +8,7 @@ import {
   LoginRoute,
   MonthlySummaryRoute,
   RegisterRoute,
+  RecurrencesRoute,
   TransactionsRoute,
   TransfersRoute,
 } from "./lazy-pages";
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
           {
             path: "/transactions",
             element: <TransactionsRoute />,
+          },
+          {
+            path: "/recurrences",
+            element: <RecurrencesRoute />,
           },
           {
             path: "/transfers",

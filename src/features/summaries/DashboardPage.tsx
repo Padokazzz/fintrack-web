@@ -1,3 +1,4 @@
+import { UpcomingRecurrences } from "../recurrences/UpcomingRecurrences";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Alert } from "../../components/ui/Alert";
@@ -146,6 +147,7 @@ export function DashboardPage() {
           isLoading={transactionsQuery.isLoading}
         />
       </section>
+      <UpcomingRecurrences />
     </div>
   );
 }
