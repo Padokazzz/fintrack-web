@@ -116,3 +116,18 @@ export function MonthlySummaryRoute() {
     </LazyPage>
   );
 }
+
+
+const RecurrencesPage = lazy(() =>
+  import("../features/recurrences/RecurrencesPage").then((module) => ({
+    default: module.RecurrencesPage,
+  }))
+);
+
+export function RecurrencesRoute() {
+  return (
+    <LazyPage>
+      <RecurrencesPage />
+    </LazyPage>
+  );
+}

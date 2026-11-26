@@ -15,6 +15,7 @@ O objetivo do projeto é construir uma experiência de uso completa em torno de 
 - Criação, consulta e reversão de transferências entre contas.
 - Filtros por mês, ano, tipo e categoria.
 - Históricos de transações e transferências paginados pela API.
+- Agenda de recorrências mensais e projeção de saldo por conta.
 - Formulários com validação.
 - Estados de carregamento, erro e ausência de dados.
 - Área autenticada com navegação lateral.
@@ -141,6 +142,12 @@ npm run build
 3. O usuário cadastra contas financeiras e categorias.
 4. As transações são registradas e associadas aos recursos correspondentes.
 5. O dashboard consulta os dados e apresenta o resumo do período.
+
+## Recorrências
+
+Em **Recorrências**, selecione **Nova recorrência**, vincule uma conta e uma categoria e informe a primeira data. Para salário ou débito fixo, escolha **Registrar automaticamente** e informe o valor. Para contas variáveis, escolha **Confirmar manualmente** e preencha o valor real quando a ocorrência aparecer na agenda.
+
+O dashboard mostra os próximos lançamentos. A agenda mostra os saldos projetados até 30 dias e sinaliza contas com valores a definir. Você pode pausar, retomar ou excluir regras pela mesma tela.
 
 ## Tratamento de estados e validações
 
