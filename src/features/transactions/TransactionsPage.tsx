@@ -68,6 +68,7 @@ export function TransactionsPage() {
 
   async function refreshFinancialData() {
     await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ["spending-insights"] }),
       queryClient.invalidateQueries({
         queryKey: ["transactions"],
       }),

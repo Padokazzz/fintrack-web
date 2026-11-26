@@ -26,7 +26,7 @@ export function RecurrencesPage() {
 
   async function refresh() {
     await Promise.all([
-      "recurrences", "recurrence-agenda", "accounts", "transactions", "monthly-summary", "overall-balance", "category-totals",
+      "recurrences", "recurrence-agenda", "accounts", "transactions", "spending-insights", "monthly-summary", "overall-balance", "category-totals",
     ].map((key) => queryClient.invalidateQueries({ queryKey: [key] })));
   }
 
