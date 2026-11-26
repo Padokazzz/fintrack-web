@@ -37,6 +37,12 @@ const TransactionsPage = lazy(() =>
   }))
 );
 
+const TransfersPage = lazy(() =>
+  import("../features/transfers/TransfersPage").then((module) => ({
+    default: module.TransfersPage,
+  }))
+);
+
 const MonthlySummaryPage = lazy(() =>
   import("../features/summaries/MonthlySummaryPage").then((module) => ({
     default: module.MonthlySummaryPage,
@@ -91,6 +97,14 @@ export function TransactionsRoute() {
   return (
     <LazyPage>
       <TransactionsPage />
+    </LazyPage>
+  );
+}
+
+export function TransfersRoute() {
+  return (
+    <LazyPage>
+      <TransfersPage />
     </LazyPage>
   );
 }
