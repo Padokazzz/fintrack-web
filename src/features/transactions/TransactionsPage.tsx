@@ -80,6 +80,9 @@ export function TransactionsPage() {
       queryClient.invalidateQueries({
         queryKey: ["monthly-summary"],
       }),
+      queryClient.invalidateQueries({
+        queryKey: ["category-totals"],
+      }),
     ]);
   }
 

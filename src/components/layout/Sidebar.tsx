@@ -8,6 +8,7 @@ import {
   Tags,
   Wallet,
 } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { useLanguage } from "../../lib/i18n/useLanguage";
 
@@ -87,6 +88,22 @@ function NavigationLinks({ onNavigate }: { onNavigate?: () => void }) {
 
 export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
   const { t } = useLanguage();
+  const drawer = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = drawer.current;
+    if (!dialog) return;
+
+    if (isMobileOpen && !dialog.open) dialog.showModal();
+    if (!isMobileOpen && dialog.open) dialog.close();
+
+    const desktop = window.matchMedia("(min-width: 768px)");
+    function closeOnDesktop() {
+      if (desktop.matches && dialog?.open) dialog.close();
+    }
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => desktop.removeEventListener("change", closeOnDesktop);
+  }, [isMobileOpen]);
 
   return (
     <>
@@ -101,16 +118,13 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
         <NavigationLinks />
       </aside>
 
-      {isMobileOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          <button
-            type="button"
-            className="absolute inset-0 bg-slate-950/40"
-            onClick={onMobileClose}
-            aria-label={t.nav.closeMenu}
-          />
-
-          <aside className="relative flex h-full w-72 max-w-[85vw] flex-col border-r border-slate-200 bg-white px-4 py-5 shadow-xl">
+      <dialog
+        ref={drawer}
+        id="mobile-navigation"
+        aria-label={t.nav.openMenu}
+        onClose={onMobileClose}
+        className="fixed inset-0 m-0 h-dvh max-h-none w-72 max-w-[85vw] overflow-y-auto overscroll-contain border-r border-slate-200 bg-white p-5 text-slate-950 shadow-xl backdrop:bg-slate-950/40 md:hidden"
+      >
             <div className="mb-8 flex items-start justify-between gap-4 px-2">
               <div>
                 <h1 className="text-xl font-semibold tracking-normal text-slate-950">
@@ -132,9 +146,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
             </div>
 
             <NavigationLinks onNavigate={onMobileClose} />
-          </aside>
-        </div>
-      )}
+      </dialog>
     </>
   );
 }
