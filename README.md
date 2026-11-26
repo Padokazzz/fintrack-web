@@ -14,6 +14,7 @@ O objetivo do projeto é construir uma experiência de uso completa em torno de 
 - Criação, edição, consulta e remoção de transações.
 - Criação, consulta e reversão de transferências entre contas.
 - Filtros por mês, ano, tipo e categoria.
+- Históricos de transações e transferências paginados pela API.
 - Formulários com validação.
 - Estados de carregamento, erro e ausência de dados.
 - Área autenticada com navegação lateral.

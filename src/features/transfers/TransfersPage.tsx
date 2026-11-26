@@ -7,6 +7,7 @@ import { ArrowRightLeft, Plus } from "lucide-react";
 import { useState } from "react";
 import { Alert } from "../../components/ui/Alert";
 import { EmptyState } from "../../components/ui/EmptyState";
+import { Pagination } from "../../components/ui/Pagination";
 import { getApiErrorMessage } from "../../lib/api-error";
 import { formatCurrency, formatDate } from "../../lib/formatters";
 import { useLanguage } from "../../lib/i18n/useLanguage";
@@ -23,11 +24,12 @@ import type { Transfer } from "./types";
 export function TransfersPage() {
   const queryClient = useQueryClient();
   const { currency, locale, t } = useLanguage();
+  const [page, setPage] = useState(1);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const transfersQuery = useQuery({
-    queryKey: ["transfers"],
-    queryFn: getTransfers,
+    queryKey: ["transfers", page],
+    queryFn: () => getTransfers(page),
   });
 
   const accountsQuery = useQuery({
@@ -47,6 +49,7 @@ export function TransfersPage() {
     mutationFn: createTransfer,
     onSuccess: async () => {
       await refreshFinancialData();
+      setPage(1);
       setIsFormOpen(false);
     },
   });
@@ -72,7 +75,7 @@ export function TransfersPage() {
     deleteMutation.mutate(transfer.id);
   }
 
-  const transfers = transfersQuery.data ?? [];
+  const transfers = transfersQuery.data?.items ?? [];
   const accounts = accountsQuery.data ?? [];
   const canCreateTransfer = accounts.length >= 2;
 
@@ -201,6 +204,13 @@ export function TransfersPage() {
             </article>
           ))}
         </section>
+      )}
+      {transfersQuery.data && (
+        <Pagination
+          result={transfersQuery.data}
+          disabled={transfersQuery.isFetching}
+          onPageChange={setPage}
+        />
       )}
     </div>
   );

@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { Alert } from "../../components/ui/Alert";
 import { EmptyState } from "../../components/ui/EmptyState";
+import { Pagination } from "../../components/ui/Pagination";
 import { getApiErrorMessage } from "../../lib/api-error";
 import { formatCurrency, formatDate } from "../../lib/formatters";
 import { useLanguage } from "../../lib/i18n/useLanguage";
@@ -44,14 +45,15 @@ export function TransactionsPage() {
     getInitialFilters
   );
 
+  const [page, setPage] = useState(1);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const [editingTransaction, setEditingTransaction] =
     useState<Transaction | null>(null);
 
   const transactionsQuery = useQuery({
-    queryKey: ["transactions", filters],
-    queryFn: () => getTransactions(filters),
+    queryKey: ["transactions", filters, page],
+    queryFn: () => getTransactions(filters, page),
   });
 
   const accountsQuery = useQuery({
@@ -86,6 +88,7 @@ export function TransactionsPage() {
 
     onSuccess: async () => {
       await refreshFinancialData();
+      setPage(1);
       setIsFormOpen(false);
     },
   });
@@ -140,7 +143,7 @@ export function TransactionsPage() {
     deleteMutation.mutate(transaction.id);
   }
 
-  const transactions = transactionsQuery.data ?? [];
+  const transactions = transactionsQuery.data?.items ?? [];
   const accounts = accountsQuery.data ?? [];
   const categories = categoriesQuery.data ?? [];
 
@@ -197,7 +200,10 @@ export function TransactionsPage() {
       <TransactionFilters
         filters={filters}
         categories={categories}
-        onChange={setFilters}
+        onChange={(nextFilters) => {
+          setFilters(nextFilters);
+          setPage(1);
+        }}
       />
 
       {isFormOpen && canCreateTransaction && (
@@ -430,6 +436,13 @@ export function TransactionsPage() {
             </table>
           </div>
         </section>
+      )}
+      {transactionsQuery.data && (
+        <Pagination
+          result={transactionsQuery.data}
+          disabled={transactionsQuery.isFetching}
+          onPageChange={setPage}
+        />
       )}
     </div>
   );

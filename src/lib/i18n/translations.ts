@@ -59,6 +59,12 @@ export const translations = {
       balance: "Balance",
       finalBalance: "Final balance",
     },
+    pagination: {
+      label: "Pagination",
+      previous: "Previous",
+      next: "Next",
+      position: (page: number, count: number) => `Page ${page} of ${count}`,
+    },
     validation: {
       nameMin: "Name must have at least 2 characters",
       validEmail: "Enter a valid email",
@@ -284,6 +290,12 @@ export const translations = {
       expenses: "Despesas",
       balance: "Saldo",
       finalBalance: "Saldo final",
+    },
+    pagination: {
+      label: "Paginação",
+      previous: "Anterior",
+      next: "Próxima",
+      position: (page: number, count: number) => `Página ${page} de ${count}`,
     },
     validation: {
       nameMin: "O nome deve ter pelo menos 2 caracteres",

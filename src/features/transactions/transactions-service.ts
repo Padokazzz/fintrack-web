@@ -1,4 +1,5 @@
 import { api } from "../../lib/api";
+import type { Page } from "../../lib/pagination";
 import type {
   Transaction,
   TransactionFilters,
@@ -14,9 +15,9 @@ function withUtcDate(data: TransactionRequest): TransactionRequest {
   };
 }
 
-export async function getTransactions(filters: TransactionFilters) {
-  const response = await api.get<Transaction[]>("/Transactions", {
-    params: filters,
+export async function getTransactions(filters: TransactionFilters, page: number, pageSize?: number) {
+  const response = await api.get<Page<Transaction>>("/Transactions/page", {
+    params: { ...filters, page, pageSize },
   });
 
   return response.data;
