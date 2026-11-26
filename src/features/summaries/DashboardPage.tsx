@@ -1,3 +1,4 @@
+import { SpendingInsights } from "./components/SpendingInsights";
 import { UpcomingRecurrences } from "../recurrences/UpcomingRecurrences";
 import { CategoryReport } from "./components/CategoryReport";
 import { useQuery } from "@tanstack/react-query";
@@ -148,6 +149,7 @@ export function DashboardPage() {
           isLoading={transactionsQuery.isLoading}
         />
       </section>
+      <SpendingInsights />
       <CategoryReport month={month} year={year} />
       <UpcomingRecurrences />
     </div>

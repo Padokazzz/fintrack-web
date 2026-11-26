@@ -32,6 +32,7 @@ export function CategoriesPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       queryClient.invalidateQueries({ queryKey: ["category-totals"] });
+      queryClient.invalidateQueries({ queryKey: ["spending-insights"] });
       setIsFormOpen(false);
     },
   });
@@ -42,6 +43,7 @@ export function CategoriesPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       queryClient.invalidateQueries({ queryKey: ["category-totals"] });
+      queryClient.invalidateQueries({ queryKey: ["spending-insights"] });
       setEditingCategory(null);
     },
   });
@@ -51,6 +53,7 @@ export function CategoriesPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       queryClient.invalidateQueries({ queryKey: ["category-totals"] });
+      queryClient.invalidateQueries({ queryKey: ["spending-insights"] });
     },
   });
 
