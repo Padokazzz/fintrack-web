@@ -32,12 +32,8 @@ export function MonthlySummaryPage() {
   });
 
   const transactionsQuery = useQuery({
-    queryKey: ["transactions", { month, year }],
-    queryFn: () =>
-      getTransactions({
-        month,
-        year,
-      }),
+    queryKey: ["transactions", { month, year }, 1, 5],
+    queryFn: () => getTransactions({ month, year }, 1, 5),
   });
 
   const overallBalanceQuery = useQuery({
@@ -47,7 +43,7 @@ export function MonthlySummaryPage() {
 
   const summary = summaryQuery.data;
   const overallBalance = overallBalanceQuery.data?.totalBalance ?? 0;
-  const transactions = transactionsQuery.data ?? [];
+  const transactions = transactionsQuery.data?.items ?? [];
 
   const totalIncome = summary?.totalIncome ?? 0;
   const totalExpense = summary?.totalExpense ?? 0;

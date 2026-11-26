@@ -32,12 +32,8 @@ export function DashboardPage() {
   });
 
   const transactionsQuery = useQuery({
-    queryKey: ["transactions", { month, year }],
-    queryFn: () =>
-      getTransactions({
-        month,
-        year,
-      }),
+    queryKey: ["transactions", { month, year }, 1, 5],
+    queryFn: () => getTransactions({ month, year }, 1, 5),
   });
 
   const overallBalanceQuery = useQuery({
@@ -51,7 +47,7 @@ export function DashboardPage() {
   const totalIncome = summary?.totalIncome ?? 0;
   const totalExpense = summary?.totalExpense ?? 0;
   const finalBalance = summary?.finalBalance ?? 0;
-  const transactions = transactionsQuery.data ?? [];
+  const transactions = transactionsQuery.data?.items ?? [];
 
   return (
     <div className="space-y-6">
@@ -132,7 +128,7 @@ export function DashboardPage() {
           value={
             transactionsQuery.isLoading
               ? t.common.loading
-              : String(transactions.length)
+              : String(transactionsQuery.data?.totalCount ?? 0)
           }
           description={t.summaries.movementsRegistered}
         />

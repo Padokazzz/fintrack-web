@@ -1,4 +1,5 @@
 import { api } from "../../lib/api";
+import type { Page } from "../../lib/pagination";
 import type { Transfer, TransferRequest } from "./types";
 
 function withUtcDate(data: TransferRequest): TransferRequest {
@@ -10,8 +11,8 @@ function withUtcDate(data: TransferRequest): TransferRequest {
   };
 }
 
-export async function getTransfers() {
-  const response = await api.get<Transfer[]>("/Transfers");
+export async function getTransfers(page: number) {
+  const response = await api.get<Page<Transfer>>("/Transfers/page", { params: { page } });
 
   return response.data;
 }
