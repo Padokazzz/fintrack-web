@@ -1,11 +1,13 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
 import { getToken, removeToken, saveToken } from "./auth-storage";
+import { desktopAdapter, desktopApiBase, isDesktop } from "./platform/desktop";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL ?? "/api";
+const baseURL = isDesktop ? desktopApiBase : (import.meta.env.VITE_API_BASE_URL ?? "/api");
+const adapter = isDesktop ? desktopAdapter : undefined;
 const sessionHeaders = { "X-FinTrack-Session": "1" };
 
-export const api = axios.create({ baseURL });
-export const authApi = axios.create({ baseURL, withCredentials: true });
+export const api = axios.create({ baseURL, adapter });
+export const authApi = axios.create({ baseURL, adapter, withCredentials: true });
 
 let refreshing: Promise<string> | undefined;
 let signingOut = false;
@@ -60,7 +62,8 @@ api.interceptors.response.use(
     } catch (refreshError) {
       if (axios.isAxiosError(refreshError) && refreshError.response?.status === 401) {
         removeToken();
-        window.location.assign("/login");
+        if (isDesktop) window.location.hash = "/login";
+        else window.location.assign("/login");
       }
       throw refreshError;
     }

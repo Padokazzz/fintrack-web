@@ -185,3 +185,33 @@ Quando um JWT expira, o frontend tenta renovar a sessão por cookie HttpOnly e r
 ---
 
 Desenvolvido por [Leonardo Padilha](https://www.leonardopadilha.com).
+
+## Desktop macOS com Tauri
+
+O desktop reutiliza as telas do React e conecta à mesma API .NET usada pelo site.
+Instale o Rust estável e as ferramentas de compilação do Xcode. Com a API e o
+PostgreSQL rodando no Docker, execute:
+
+```bash
+npm ci
+npm run desktop:dev
+npm run desktop:build -- --bundles app
+```
+
+A API padrão é `http://127.0.0.1:8080`. Para compilar com outra origem, defina
+`FINTRACK_DESKTOP_API_URL=https://api.example.com` antes do comando. A camada
+nativa aceita HTTPS ou HTTP de loopback e mantém o cookie de renovação em
+memória. Ao encerrar totalmente o app, é preciso entrar de novo. A exportação
+CSV abre o diálogo de salvamento do sistema.
+
+Para testar o transporte com a API e o PostgreSQL descartáveis:
+
+```bash
+cd src-tauri
+cargo test
+FINTRACK_DESKTOP_TEST_API_URL=http://127.0.0.1:8080 cargo test refresh_and_export_against_fintrack_api -- --ignored
+```
+
+A primeira validação tem como alvo o macOS. O app precisa alcançar a API para
+consultar ou registrar dados. A conexão e o salvamento nativos ficam separados
+das telas, que são compartilhadas com a versão web.

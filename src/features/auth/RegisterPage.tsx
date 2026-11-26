@@ -92,7 +92,8 @@ export function RegisterPage() {
           <Alert variant="error">
             {getApiErrorMessage(
               registerMutation.error,
-              t.auth.registerError
+              t.auth.registerError,
+              t.auth.apiUnavailable,
             )}
           </Alert>
         )}

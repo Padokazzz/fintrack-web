@@ -8,10 +8,15 @@ type ApiErrorResponse = {
 
 export function getApiErrorMessage(
   error: unknown,
-  fallbackMessage: string
+  fallbackMessage: string,
+  networkMessage = fallbackMessage,
 ) {
   if (!axios.isAxiosError<ApiErrorResponse>(error)) {
     return fallbackMessage;
+  }
+
+  if (!error.response && error.code === axios.AxiosError.ERR_NETWORK) {
+    return networkMessage;
   }
 
   const data = error.response?.data;

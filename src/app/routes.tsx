@@ -1,4 +1,5 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, createHashRouter, Navigate } from "react-router-dom";
+import { isDesktop } from "../lib/platform/desktop";
 import { AppLayout } from "../components/layout/AppLayout";
 import { ProtectedRoute } from "../components/layout/ProtectedRoute";
 import {
@@ -13,7 +14,9 @@ import {
   TransfersRoute,
 } from "./lazy-pages";
 
-export const router = createBrowserRouter([
+const createRouter = isDesktop ? createHashRouter : createBrowserRouter;
+
+export const router = createRouter([
   {
     path: "/",
     element: <Navigate to="/dashboard" replace />,

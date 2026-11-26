@@ -1,3 +1,4 @@
+import { isDesktop, saveDesktopCsv } from "../../lib/platform/desktop";
 import { api } from "../../lib/api";
 import type { MonthlySummary, OverallBalance } from "./types";
 
@@ -41,6 +42,11 @@ export async function getCategoryTotals(month: number, year: number, type: 1 | 2
 
 export async function downloadTransactions(month: number, year: number) {
   const { data } = await api.get<Blob>("/reports/transactions.csv", { params: { month, year }, responseType: "blob" });
+  if (isDesktop) {
+    await saveDesktopCsv(data, year, month);
+    return;
+  }
+
   const url = URL.createObjectURL(data);
   const link = document.createElement("a");
   link.href = url;
