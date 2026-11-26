@@ -125,9 +125,10 @@ Em outro terminal, inicie a API seguindo as instruções do [README do backend](
 | `npm run lint` | Executa o ESLint. |
 | `npm run preview` | Pré-visualiza a build localmente. |
 
-Validação local recomendada antes de publicar alterações:
+O GitHub Actions roda a instalação pelo lockfile, o lint e o build em pull requests para a `main`. Para repetir as verificações localmente:
 
 ```bash
+npm ci
 npm run lint
 npm run build
 ```
