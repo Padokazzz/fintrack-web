@@ -254,3 +254,11 @@ Com o FinTrack publicado em HTTPS, é possível instalar o site pela opção **I
 - iPhone e iPad com Safari: abra **Compartilhar**, selecione **Adicionar à Tela de Início** e confirme. Ative **Abrir como App da Web** se essa opção aparecer.
 
 O ícone abre a versão web do FinTrack. O acesso aos dados continua dependendo de conexão com a API.
+
+### Sessão da versão web publicada
+
+Sirva o site e `/api` na mesma origem HTTPS. A versão web restaura a sessão
+usando o cookie de renovação da API e mantém o token de acesso em memória.
+O Nginx aplica uma política de segurança de conteúdo que permite chamadas
+à API da própria origem. Aplique os mesmos cabeçalhos se publicar com outro
+servidor ou ingresso.

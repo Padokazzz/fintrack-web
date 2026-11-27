@@ -1,13 +1,14 @@
 // @vitest-environment jsdom
 import { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { afterEach, expect, test, vi } from "vitest";
-import { api, authApi, revokeSession } from "./api";
-import { getToken, saveToken } from "./auth-storage";
+import { api, authApi, refreshSession, revokeSession } from "./api";
+import { clearLegacyWebSession, clearSession, getToken, getUser, saveToken } from "./auth-storage";
 
 const originalAdapter = api.defaults.adapter;
 
 afterEach(() => {
   api.defaults.adapter = originalAdapter;
+  clearSession();
   localStorage.clear();
   vi.restoreAllMocks();
 });
@@ -42,4 +43,21 @@ test("revokes the remote session before clearing the local token", async () => {
     headers: { "X-FinTrack-Session": "1" },
   });
   expect(getToken()).toBeNull();
+});
+
+test("restores a web session from the refresh cookie and keeps the token out of storage", async () => {
+  localStorage.setItem("fintrack_token", "legacy-token");
+  localStorage.setItem("fintrack_user", "{}");
+  clearLegacyWebSession();
+  const session = { token: "fresh", userId: "123", name: "Test", email: "test@example.com" };
+  vi.spyOn(authApi, "post").mockResolvedValue({ data: session });
+
+  expect(getToken()).toBeNull();
+  await refreshSession();
+
+  expect(getToken()).toBe("fresh");
+  expect(getUser()).toEqual({ userId: "123", name: "Test", email: "test@example.com" });
+  expect(localStorage.getItem("fintrack_token")).toBeNull();
+  expect(localStorage.getItem("fintrack_user")).toBeNull();
+  expect(sessionStorage.getItem("fintrack_token")).toBeNull();
 });
