@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { EmailChallengeForm } from "./EmailChallengeForm";
+import type { EmailChallenge } from "./types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -12,6 +15,7 @@ import { useAuth } from "./use-auth";
 
 export function LoginPage() {
   const { handleLoginSuccess } = useAuth();
+  const [challenge, setChallenge] = useState<EmailChallenge | null>(null);
   const { t } = useLanguage();
 
   const {
@@ -24,12 +28,18 @@ export function LoginPage() {
 
   const loginMutation = useMutation({
     mutationFn: loginUser,
-    onSuccess: handleLoginSuccess,
+    onSuccess: (result) => {
+      if ("challengeId" in result) setChallenge(result);
+      else handleLoginSuccess(result);
+    },
   });
 
   function onSubmit(data: LoginFormData) {
     loginMutation.mutate(data);
   }
+
+  if (challenge) return <EmailChallengeForm challengeId={challenge.challengeId}
+    onConfirmed={handleLoginSuccess} onBack={() => setChallenge(null)} />;
 
   return (
     <AuthShell

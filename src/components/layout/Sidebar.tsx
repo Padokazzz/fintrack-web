@@ -6,6 +6,7 @@ import {
   Repeat2,
   X,
   Tags,
+  Shield,
   Wallet,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
@@ -48,6 +49,7 @@ const navItems = [
     to: "/reports/monthly-summary",
     icon: ChartNoAxesCombined,
   },
+  { labelKey: "myData", to: "/my-data", icon: Shield },
 ] as const;
 
 type SidebarProps = {

@@ -262,3 +262,17 @@ usando o cookie de renovação da API e mantém o token de acesso em memória.
 O Nginx aplica uma política de segurança de conteúdo que permite chamadas
 à API da própria origem. Aplique os mesmos cabeçalhos se publicar com outro
 servidor ou ingresso.
+
+### Privacidade
+
+O aviso público fica em `/privacy`. **Meus dados** fica no menu após o login
+e exige a senha atual para exportar ou excluir o cadastro.
+
+Antes de disponibilizar o FinTrack a pessoas com dados reais, configure
+`VITE_PRIVACY_CONTROLLER` (nome do responsável) e `VITE_PRIVACY_CONTACT`
+(e-mail que recebe solicitações). Em Docker, use esses valores como
+argumentos do build. Revise o aviso com as bases legais por finalidade,
+os fornecedores e compartilhamentos efetivos e os prazos de retenção.
+Teste o canal para identificação e atendimento de pedidos de correção,
+acesso e exclusão. Defina também o tratamento de cópias de segurança e logs
+com os provedores escolhidos para o piloto.

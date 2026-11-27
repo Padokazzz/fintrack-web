@@ -15,3 +15,6 @@ export type AuthResponse = {
   email: string;
   token: string;
 };
+export type EmailChallenge = { challengeId: string };
+
+export type AuthResult = AuthResponse | EmailChallenge;

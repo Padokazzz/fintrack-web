@@ -1,3 +1,4 @@
+import { MyDataPage, PrivacyNoticePage } from "../features/privacy/PrivacyPages";
 import { createBrowserRouter, createHashRouter, Navigate } from "react-router-dom";
 import { isDesktop } from "../lib/platform/desktop";
 import { AppLayout } from "../components/layout/AppLayout";
@@ -21,6 +22,7 @@ export const router = createRouter([
     path: "/",
     element: <Navigate to="/dashboard" replace />,
   },
+  { path: "/privacy", element: <PrivacyNoticePage /> },
   {
     path: "/login",
     element: <LoginRoute />,
@@ -35,6 +37,7 @@ export const router = createRouter([
       {
         element: <AppLayout />,
         children: [
+          { path: "/my-data", element: <MyDataPage /> },
           {
             path: "/dashboard",
             element: <DashboardRoute />,
