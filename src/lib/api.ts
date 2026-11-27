@@ -1,5 +1,6 @@
+import type { AuthResponse } from "../features/auth/types";
 import axios, { type InternalAxiosRequestConfig } from "axios";
-import { getToken, removeToken, saveToken } from "./auth-storage";
+import { clearSession, getToken, saveToken, saveUser } from "./auth-storage";
 import { desktopAdapter, desktopApiBase, isDesktop } from "./platform/desktop";
 
 const baseURL = isDesktop ? desktopApiBase : (import.meta.env.VITE_API_BASE_URL ?? "/api");
@@ -12,10 +13,38 @@ export const authApi = axios.create({ baseURL, adapter, withCredentials: true })
 let refreshing: Promise<string> | undefined;
 let signingOut = false;
 
-function refreshSession() {
-  refreshing ??= authApi.post<{ token: string }>("/auth/refresh", null, { headers: sessionHeaders })
+const sessionEvents = !isDesktop && typeof BroadcastChannel !== "undefined"
+  ? new BroadcastChannel("fintrack-session") : null;
+let sessionGeneration = 0;
+
+function redirectToLogin() {
+  if (isDesktop) window.location.hash = "/login";
+  else window.location.assign("/login");
+}
+
+sessionEvents?.addEventListener("message", (event) => {
+  if (event.data !== "logout") return;
+  sessionGeneration++;
+  clearSession();
+  if (window.location.pathname !== "/login") redirectToLogin();
+});
+
+function serializeSession<T>(action: () => Promise<T>): Promise<T> {
+  return !isDesktop && navigator.locks
+    ? navigator.locks.request("fintrack-session", action)
+    : action();
+}
+
+export function refreshSession() {
+  const generation = sessionGeneration;
+  refreshing ??= serializeSession(() => authApi.post<AuthResponse>(
+    "/auth/refresh", null, { headers: sessionHeaders },
+  ))
     .then(({ data }) => {
-      saveToken(data.token);
+      if (generation === sessionGeneration) {
+        saveToken(data.token);
+        saveUser(data);
+      }
       return data.token;
     })
     .finally(() => { refreshing = undefined; });
@@ -26,8 +55,10 @@ export async function revokeSession() {
   signingOut = true;
   try {
     await refreshing?.catch(() => undefined);
-    await authApi.post("/auth/logout", null, { headers: sessionHeaders });
-    removeToken();
+    await serializeSession(() => authApi.post("/auth/logout", null, { headers: sessionHeaders }));
+    sessionGeneration++;
+    clearSession();
+    sessionEvents?.postMessage("logout");
   } finally {
     signingOut = false;
   }
@@ -61,13 +92,13 @@ api.interceptors.response.use(
       }
     } catch (refreshError) {
       if (axios.isAxiosError(refreshError) && refreshError.response?.status === 401) {
-        removeToken();
-        if (isDesktop) window.location.hash = "/login";
-        else window.location.assign("/login");
+        clearSession();
+        redirectToLogin();
       }
       throw refreshError;
     }
 
+    if (!getToken() || signingOut) throw error;
     return api(config);
   },
 );
