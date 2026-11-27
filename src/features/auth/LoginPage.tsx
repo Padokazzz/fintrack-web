@@ -4,7 +4,7 @@ import type { EmailChallenge } from "./types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Alert } from "../../components/ui/Alert";
 import { AuthShell } from "../../components/ui/AuthShell";
 import { getApiErrorMessage } from "../../lib/api-error";
@@ -16,7 +16,8 @@ import { useAuth } from "./use-auth";
 export function LoginPage() {
   const { handleLoginSuccess } = useAuth();
   const [challenge, setChallenge] = useState<EmailChallenge | null>(null);
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const { state } = useLocation();
 
   const {
     register,
@@ -46,6 +47,9 @@ export function LoginPage() {
       title={t.auth.signIn}
       description={t.auth.signInDescription}
     >
+      {state?.passwordReset && <p role="status" className="mb-4 text-sm text-emerald-800">
+        {locale.startsWith("pt") ? "Senha redefinida. Entre com sua nova senha." : "Password reset. Sign in with your new password."}
+      </p>}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="text-sm font-medium text-slate-700">
@@ -80,6 +84,10 @@ export function LoginPage() {
             </p>
           )}
         </div>
+
+        <Link to="/forgot-password" className="inline-block text-sm font-medium text-emerald-700 underline">
+          {t.auth.forgotPassword}
+        </Link>
 
         {loginMutation.isError && (
           <Alert variant="error">

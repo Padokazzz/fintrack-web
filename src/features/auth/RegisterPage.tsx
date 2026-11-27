@@ -99,6 +99,14 @@ export function RegisterPage() {
           )}
         </div>
 
+        <label className="grid gap-1 text-sm font-medium text-slate-700">
+          {t.auth.confirmPassword}
+          <input type="password" autoComplete="new-password" maxLength={100}
+            {...register("confirmPassword")}
+            className="rounded-lg border border-slate-300 px-3 py-2" />
+          {errors.confirmPassword && <span role="alert" className="text-rose-700">{errors.confirmPassword.message}</span>}
+        </label>
+
         {registerMutation.isError && (
           <Alert variant="error">
             {getApiErrorMessage(
