@@ -1,7 +1,10 @@
+import { useState } from "react";
+import { EmailChallengeForm } from "./EmailChallengeForm";
+import type { EmailChallenge } from "./types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert } from "../../components/ui/Alert";
 import { AuthShell } from "../../components/ui/AuthShell";
 import { getApiErrorMessage } from "../../lib/api-error";
@@ -12,6 +15,8 @@ import { useAuth } from "./use-auth";
 
 export function RegisterPage() {
   const { handleLoginSuccess } = useAuth();
+  const navigate = useNavigate();
+  const [challenge, setChallenge] = useState<EmailChallenge | null>(null);
   const { t } = useLanguage();
 
   const {
@@ -24,12 +29,18 @@ export function RegisterPage() {
 
   const registerMutation = useMutation({
     mutationFn: registerUser,
-    onSuccess: handleLoginSuccess,
+    onSuccess: (result) => {
+      if ("challengeId" in result) setChallenge(result);
+      else handleLoginSuccess(result);
+    },
   });
 
   function onSubmit(data: RegisterFormData) {
     registerMutation.mutate(data);
   }
+
+  if (challenge) return <EmailChallengeForm challengeId={challenge.challengeId}
+    onConfirmed={handleLoginSuccess} onBack={() => navigate("/login")} />;
 
   return (
     <AuthShell

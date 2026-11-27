@@ -75,6 +75,7 @@ export const translations = {
       nextRun: (date: string) => `Next date ${date}`,
     },
     nav: {
+      myData: "My data",
       recurrences: "Recurring transactions",
       dashboard: "Dashboard",
       accounts: "Accounts",
@@ -366,6 +367,7 @@ export const translations = {
       nextRun: (date: string) => `Próxima data ${date}`,
     },
     nav: {
+      myData: "Meus dados",
       recurrences: "Recorrências",
       dashboard: "Dashboard",
       accounts: "Contas",

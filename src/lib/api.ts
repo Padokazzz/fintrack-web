@@ -51,14 +51,18 @@ export function refreshSession() {
   return refreshing;
 }
 
+export function invalidateSession() {
+  sessionGeneration++;
+  clearSession();
+  sessionEvents?.postMessage("logout");
+}
+
 export async function revokeSession() {
   signingOut = true;
   try {
     await refreshing?.catch(() => undefined);
     await serializeSession(() => authApi.post("/auth/logout", null, { headers: sessionHeaders }));
-    sessionGeneration++;
-    clearSession();
-    sessionEvents?.postMessage("logout");
+    invalidateSession();
   } finally {
     signingOut = false;
   }

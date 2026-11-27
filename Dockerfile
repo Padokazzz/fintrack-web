@@ -4,6 +4,8 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 ENV VITE_API_BASE_URL=/api
+ARG VITE_PRIVACY_CONTROLLER
+ARG VITE_PRIVACY_CONTACT
 RUN npm run build
 
 FROM nginx:alpine
