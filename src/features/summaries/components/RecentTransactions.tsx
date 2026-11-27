@@ -15,15 +15,12 @@ export function RecentTransactions({
   const recentTransactions = transactions.slice(0, 5);
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-5">
-      <div className="mb-5">
+    <section className="rounded-lg border border-slate-200 bg-white p-4">
+      <div className="mb-3">
         <h2 className="text-base font-semibold text-slate-950">
           {t.summaries.recentTransactions}
         </h2>
 
-        <p className="mt-1 text-sm text-slate-500">
-          {t.summaries.recentTransactionsDescription}
-        </p>
       </div>
 
       {isLoading && (
@@ -46,7 +43,7 @@ export function RecentTransactions({
             return (
               <div
                 key={transaction.id}
-                className="flex items-center justify-between gap-4 border-b border-slate-100 pb-4 last:border-0 last:pb-0"
+                className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b border-slate-100 pb-3 last:border-0 last:pb-0"
               >
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium text-slate-950">
@@ -61,8 +58,8 @@ export function RecentTransactions({
                 <strong
                   className={
                     isIncome
-                      ? "whitespace-nowrap text-sm font-semibold text-emerald-600"
-                      : "whitespace-nowrap text-sm font-semibold text-rose-600"
+                      ? "min-w-0 text-sm font-semibold text-emerald-600"
+                      : "min-w-0 text-sm font-semibold text-rose-600"
                   }
                 >
                   {isIncome ? "+" : "-"}

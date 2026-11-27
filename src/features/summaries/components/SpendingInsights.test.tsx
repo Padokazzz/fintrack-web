@@ -34,6 +34,7 @@ test("shows past weeks and submits overall and category limits", async () => {
     </QueryClientProvider>,
   );
 
+  fireEvent.click(await screen.findByText(/Resumo semanal|Weekly summary/));
   expect(await screen.findByText("Meals (1)")).toBeTruthy();
   fireEvent.change(screen.getByRole("combobox"), { target: { value: "2026-11-09" } });
   expect(screen.getByText(/Nenhuma despesa registrada|No expenses recorded/)).toBeTruthy();

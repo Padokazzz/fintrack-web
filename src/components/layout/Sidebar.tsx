@@ -1,3 +1,4 @@
+import { FinTrackLogo } from "../ui/FinTrackLogo";
 import {
   ArrowLeftRight,
   ChartNoAxesCombined,
@@ -111,9 +112,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
     <>
       <aside className="hidden w-64 shrink-0 border-r border-slate-200 bg-white px-4 py-5 md:block">
         <div className="mb-8 px-2">
-          <h1 className="text-xl font-semibold tracking-normal text-slate-950">
-            FinTrack
-          </h1>
+          <FinTrackLogo />
           <p className="mt-1 text-sm text-slate-500">{t.personalFinance}</p>
         </div>
 
@@ -129,9 +128,7 @@ export function Sidebar({ isMobileOpen, onMobileClose }: SidebarProps) {
       >
             <div className="mb-8 flex items-start justify-between gap-4 px-2">
               <div>
-                <h1 className="text-xl font-semibold tracking-normal text-slate-950">
-                  FinTrack
-                </h1>
+                <FinTrackLogo />
                 <p className="mt-1 text-sm text-slate-500">
                   {t.personalFinance}
                 </p>

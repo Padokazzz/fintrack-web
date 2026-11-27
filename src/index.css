@@ -10,10 +10,26 @@
 
 body {
   margin: 0;
-  min-width: 320px;
   min-height: 100dvh;
   padding: env(safe-area-inset-top) env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+#root {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Native date/select controls can otherwise determine an oversized grid track on mobile. */
+:where(main, dialog) :is(input, select, textarea) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 767px) {
+  :where(main, dialog) :is(input, select, textarea) {
+    font-size: 16px;
+  }
 }
 
 #mobile-navigation {

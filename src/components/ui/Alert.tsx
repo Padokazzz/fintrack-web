@@ -17,6 +17,7 @@ const variantClasses: Record<AlertVariant, string> = {
 export function Alert({ variant = "info", children }: AlertProps) {
   return (
     <section
+      role={variant === "error" ? "alert" : "status"}
       className={`rounded-lg border px-4 py-3 text-sm ${variantClasses[variant]}`}
     >
       {children}

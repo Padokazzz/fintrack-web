@@ -15,15 +15,24 @@ export type Account = {
   initialBalance: number;
   currentBalance: number;
   createdAt: string;
+  linkedBankAccountId?: string | null;
+  creditLimit?: number | null;
+  usedCredit?: number | null;
+  availableCredit?: number | null;
 };
 
 export type CreateAccountRequest = {
   name: string;
   type: AccountType;
   initialBalance: number;
+  linkedBankAccountId?: string | null;
+  creditLimit?: number | null;
+  initialUsedCredit?: number;
 };
 
 export type UpdateAccountRequest = {
   name: string;
   type: AccountType;
+  linkedBankAccountId?: string | null;
+  creditLimit?: number | null;
 };

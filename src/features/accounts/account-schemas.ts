@@ -11,6 +11,9 @@ export function createAccountSchema(t: TranslationDictionary) {
       z.literal(4),
       z.literal(5),
     ]),
+    linkedBankAccountId: z.string().optional(),
+    creditLimit: z.number().positive(t.validation.amountPositive).optional(),
+    initialUsedCredit: z.number().min(0, t.validation.initialBalancePositive).optional(),
     initialBalance: z
       .number()
       .min(0, t.validation.initialBalancePositive)

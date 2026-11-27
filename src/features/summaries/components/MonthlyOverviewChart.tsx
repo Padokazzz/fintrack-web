@@ -42,7 +42,7 @@ export function MonthlyOverviewChart({
   ];
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-5">
+    <section className="min-w-0 rounded-lg border border-slate-200 bg-white p-3 sm:p-5">
       <div className="mb-5">
         <h2 className="text-base font-semibold text-slate-950">
           {t.summaries.monthlyOverview}
@@ -53,7 +53,7 @@ export function MonthlyOverviewChart({
         </p>
       </div>
 
-      <div className="h-72">
+      <div className="h-56 min-w-0 sm:h-72">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
             <CartesianGrid
@@ -63,6 +63,7 @@ export function MonthlyOverviewChart({
 
             <XAxis
               dataKey="name"
+              tick={{ fontSize: 11 }}
               tickLine={false}
               axisLine={false}
             />
@@ -73,7 +74,7 @@ export function MonthlyOverviewChart({
               tickFormatter={(value) =>
                 formatCurrency(Number(value), locale, currency)
               }
-              width={90}
+              width={62}
             />
 
             <Tooltip

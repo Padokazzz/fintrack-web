@@ -29,7 +29,7 @@ export function TransactionFilters({
   }
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-4">
+    <section className="min-w-0 p-4">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <div>
           <label className="text-sm font-medium text-slate-700">

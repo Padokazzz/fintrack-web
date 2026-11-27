@@ -1,6 +1,7 @@
+import { NotFoundPage } from "./NotFoundPage";
 import { PasswordRecoveryPage } from "../features/auth/PasswordRecoveryPage";
 import { MyDataPage, PrivacyNoticePage } from "../features/privacy/PrivacyPages";
-import { createBrowserRouter, createHashRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, createHashRouter, Navigate, type RouteObject } from "react-router-dom";
 import { isDesktop } from "../lib/platform/desktop";
 import { AppLayout } from "../components/layout/AppLayout";
 import { ProtectedRoute } from "../components/layout/ProtectedRoute";
@@ -18,7 +19,7 @@ import {
 
 const createRouter = isDesktop ? createHashRouter : createBrowserRouter;
 
-export const router = createRouter([
+export const routes: RouteObject[] = [
   {
     path: "/",
     element: <Navigate to="/dashboard" replace />,
@@ -72,4 +73,7 @@ export const router = createRouter([
       },
     ],
   },
-]);
+  { path: "*", element: <NotFoundPage /> },
+];
+
+export const router = createRouter(routes);

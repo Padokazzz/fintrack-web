@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Alert } from "../../components/ui/Alert";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { getApiErrorMessage } from "../../lib/api-error";
@@ -18,9 +18,17 @@ import type { Account } from "./types";
 
 export function AccountsPage() {
   const queryClient = useQueryClient();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<Account | null>(null);
+
+  const [bankForNewCard, setBankForNewCard] = useState<Account | null>(null);
+
+  const formHeading = useRef<HTMLHeadingElement>(null);
+  const formVisible = Boolean(isFormOpen || bankForNewCard || editingAccount);
+  useEffect(() => {
+    if (formVisible) formHeading.current?.focus();
+  }, [formVisible, bankForNewCard, editingAccount]);
 
   const accountsQuery = useQuery({
     queryKey: ["accounts"],
@@ -33,6 +41,7 @@ export function AccountsPage() {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       queryClient.invalidateQueries({ queryKey: ["overall-balance"] });
       setIsFormOpen(false);
+      setBankForNewCard(null);
     },
   });
 
@@ -41,6 +50,8 @@ export function AccountsPage() {
       updateAccount(id, {
         name: data.name,
         type: data.type,
+        linkedBankAccountId: data.type === 4 ? data.linkedBankAccountId || null : null,
+        creditLimit: data.type === 4 ? data.creditLimit ?? null : null,
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
@@ -61,7 +72,10 @@ export function AccountsPage() {
     createMutation.mutate({
       name: data.name,
       type: data.type,
-      initialBalance: data.initialBalance ?? 0,
+      initialBalance: data.type === 4 ? 0 : data.initialBalance ?? 0,
+      linkedBankAccountId: data.type === 4 ? data.linkedBankAccountId || null : null,
+      creditLimit: data.type === 4 ? data.creditLimit ?? null : null,
+      initialUsedCredit: data.type === 4 ? data.initialUsedCredit : undefined,
     });
   }
 
@@ -90,6 +104,9 @@ export function AccountsPage() {
 
   const accounts = accountsQuery.data ?? [];
 
+  const banks = accounts.filter((account) => account.type === 1 || account.type === 2);
+  const pt = language === "pt-BR";
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
@@ -106,6 +123,7 @@ export function AccountsPage() {
           type="button"
           onClick={() => {
             setEditingAccount(null);
+            setBankForNewCard(null);
             setIsFormOpen((current) => !current);
           }}
           className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-emerald-600 px-4 text-sm font-medium text-white transition hover:bg-emerald-700 sm:w-auto"
@@ -115,10 +133,10 @@ export function AccountsPage() {
         </button>
       </div>
 
-      {isFormOpen && (
+      {(isFormOpen || bankForNewCard) && (
         <section className="rounded-lg border border-slate-200 bg-white p-5">
-          <h2 className="mb-4 text-base font-semibold text-slate-950">
-            {t.accounts.createAccount}
+          <h2 ref={formHeading} tabIndex={-1} className="mb-4 text-base font-semibold text-slate-950">
+            {bankForNewCard ? (pt ? "Adicionar cartão" : "Add card") : t.accounts.createAccount}
           </h2>
 
           {createMutation.isError && (
@@ -133,7 +151,14 @@ export function AccountsPage() {
           )}
 
           <AccountForm
-            submitLabel={t.accounts.createAccount}
+            key={bankForNewCard?.id ?? "new"}
+            bankAccounts={banks}
+            defaultValues={bankForNewCard ? {
+              name: pt ? `Cartão ${bankForNewCard.name}` : `${bankForNewCard.name} card`,
+              type: 4,
+              linkedBankAccountId: bankForNewCard.id,
+            } : undefined}
+            submitLabel={bankForNewCard ? (pt ? "Salvar cartão" : "Save card") : t.accounts.createAccount}
             isSubmitting={createMutation.isPending}
             onSubmit={handleCreate}
           />
@@ -142,7 +167,7 @@ export function AccountsPage() {
 
       {editingAccount && (
         <section className="rounded-lg border border-slate-200 bg-white p-5">
-          <h2 className="mb-4 text-base font-semibold text-slate-950">
+          <h2 ref={formHeading} tabIndex={-1} className="mb-4 text-base font-semibold text-slate-950">
             {t.accounts.editAccount}
           </h2>
 
@@ -158,9 +183,13 @@ export function AccountsPage() {
           )}
 
           <AccountForm
+            key={editingAccount.id}
+            bankAccounts={banks.filter((bank) => bank.id !== editingAccount.id)}
             defaultValues={{
               name: editingAccount.name,
               type: editingAccount.type,
+              creditLimit: editingAccount.creditLimit ?? undefined,
+              linkedBankAccountId: editingAccount.linkedBankAccountId ?? undefined,
             }}
             submitLabel={t.common.saveChanges}
             isSubmitting={updateMutation.isPending}
@@ -189,12 +218,20 @@ export function AccountsPage() {
 
       {accounts.length > 0 && (
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {accounts.map((account) => (
+          {accounts.filter((account) => !account.linkedBankAccountId || !banks.some((bank) => bank.id === account.linkedBankAccountId)).map((account) => (
             <AccountCard
               key={account.id}
               account={account}
+              bank={banks.find((bank) => bank.id === account.linkedBankAccountId)}
+              linkedCards={accounts.filter((card) => card.linkedBankAccountId === account.id)}
+              onAddCard={banks.includes(account) ? () => {
+                setEditingAccount(null);
+                setIsFormOpen(false);
+                setBankForNewCard(account);
+              } : undefined}
               onEdit={(selectedAccount) => {
                 setIsFormOpen(false);
+                setBankForNewCard(null);
                 setEditingAccount(selectedAccount);
               }}
               onDelete={handleDelete}

@@ -1,5 +1,15 @@
 import { api } from "../../lib/api";
 
+export const paymentMethods = [
+  { id: 1, pt: "Débito automático", en: "Direct debit" },
+  { id: 2, pt: "Boleto", en: "Bank slip" },
+  { id: 3, pt: "Pix", en: "Pix" },
+  { id: 4, pt: "Cartão", en: "Card" },
+  { id: 5, pt: "Outra forma", en: "Other method" },
+] as const;
+
+type PaymentMethod = typeof paymentMethods[number]["id"];
+
 export type RuleInput = {
   description: string;
   accountId: string;
@@ -8,11 +18,13 @@ export type RuleInput = {
   amount: number | null;
   startsOn: string;
   automatic: boolean;
+  paymentMethod?: PaymentMethod | null;
+  endsOn?: string | null;
 };
 
 export type Rule = RuleInput & { id: string; nextDate: string; paused: boolean };
 
-export type Scheduled = Pick<RuleInput, "description" | "accountId" | "type" | "amount" | "automatic"> & {
+export type Scheduled = Pick<RuleInput, "description" | "accountId" | "type" | "amount" | "automatic" | "paymentMethod"> & {
   ruleId: string;
   date: string;
   pending: boolean;
@@ -57,4 +69,40 @@ export async function confirmOccurrence(item: Scheduled, amount: number | null) 
 
 export function formatScheduledDate(date: string, locale: string) {
   return new Intl.DateTimeFormat(locale, { timeZone: "UTC" }).format(new Date(`${date}T00:00:00Z`));
+}
+
+export async function updateRule(id: string, rule: RuleInput) {
+  await api.put(`/recurrences/${id}`, rule);
+}
+
+export type Amortization = {
+  id: string;
+  date: string;
+  amount: number | null;
+  installments: number;
+};
+
+export type AmortizationComparison = {
+  remainingBefore: number;
+  remainingAfter: number;
+  payment: number;
+};
+
+export type SavedAmortization = Amortization & {
+  remainingBefore: number | null;
+  remainingAfter: number | null;
+  comparedPayment: number | null;
+  savings: number | null;
+};
+
+export async function saveAmortizationComparison(ruleId: string, id: string, input: AmortizationComparison) {
+  await api.put(`/recurrences/${ruleId}/amortizations/${id}/comparison`, input);
+}
+
+export async function getAmortizations(id: string) {
+  return (await api.get<SavedAmortization[]>(`/recurrences/${id}/amortizations`)).data;
+}
+
+export async function recordAmortization(id: string, item: Amortization) {
+  await api.post(`/recurrences/${id}/amortizations`, item);
 }
