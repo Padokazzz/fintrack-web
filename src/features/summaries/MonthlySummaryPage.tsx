@@ -125,7 +125,7 @@ export function MonthlySummaryPage() {
         />
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-[2fr_1fr]">
+      <section className="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <MonthlyOverviewChart
           totalIncome={totalIncome}
           totalExpense={totalExpense}

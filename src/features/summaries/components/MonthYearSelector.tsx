@@ -16,7 +16,7 @@ export function MonthYearSelector({
   const { t } = useLanguage();
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row">
+    <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,0.55fr)] gap-2 sm:flex sm:gap-3">
       <div>
         <label
           htmlFor="summary-month"

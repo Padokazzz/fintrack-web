@@ -1,5 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
+import { InlineFinancialSetup } from "../../../components/ui/InlineFinancialSetup";
+import { localDateInput } from "../../../lib/formatters";
 import { useLanguage } from "../../../lib/i18n/useLanguage";
 import type { Account } from "../../accounts/types";
 import type {
@@ -29,16 +31,6 @@ const transactionTypes: {
   { label: "Expense", value: 2 },
 ];
 
-function getCurrentDate() {
-  const date = new Date();
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
 export function TransactionForm({
   accounts,
   categories,
@@ -48,7 +40,8 @@ export function TransactionForm({
   onSubmit,
   onCancel,
 }: TransactionFormProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const pt = language === "pt-BR";
 
   const {
     register,
@@ -61,9 +54,9 @@ export function TransactionForm({
     defaultValues: {
       description: defaultValues?.description ?? "",
       amount: defaultValues?.amount ?? 0,
-      date: defaultValues?.date ?? getCurrentDate(),
+      date: defaultValues?.date ?? localDateInput(),
       type: defaultValues?.type ?? 2,
-      accountId: defaultValues?.accountId ?? "",
+      accountId: defaultValues?.accountId ?? (accounts.length === 1 ? accounts[0].id : ""),
       categoryId: defaultValues?.categoryId ?? "",
     },
   });
@@ -72,6 +65,9 @@ export function TransactionForm({
     control,
     name: "type",
   });
+
+  const selectedAccount = useWatch({ control, name: "accountId" });
+  const selectedCategory = useWatch({ control, name: "categoryId" });
 
   const availableCategories = categories.filter(
     (category) => category.type === selectedType
@@ -88,13 +84,14 @@ export function TransactionForm({
     >
       <div className="grid gap-4 md:grid-cols-2">
         <div className="md:col-span-2">
-          <label className="text-sm font-medium text-slate-700">
+          <label htmlFor="transaction-description" className="text-sm font-medium text-slate-700">
             {t.transactions.descriptionLabel}
           </label>
 
           <input
             type="text"
             placeholder={t.transactions.descriptionPlaceholder}
+            id="transaction-description"
             {...register("description")}
             className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500"
           />
@@ -107,14 +104,16 @@ export function TransactionForm({
         </div>
 
         <div>
-          <label className="text-sm font-medium text-slate-700">
+          <label htmlFor="transaction-amount" className="text-sm font-medium text-slate-700">
             {t.transactions.amount}
           </label>
 
           <input
             type="number"
+            inputMode="decimal"
             step="0.01"
             min="0"
+            id="transaction-amount"
             {...register("amount", {
               valueAsNumber: true,
             })}
@@ -129,12 +128,13 @@ export function TransactionForm({
         </div>
 
         <div>
-          <label className="text-sm font-medium text-slate-700">
+          <label htmlFor="transaction-date" className="text-sm font-medium text-slate-700">
             {t.transactions.date}
           </label>
 
           <input
             type="date"
+            id="transaction-date"
             {...register("date")}
             className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500"
           />
@@ -147,11 +147,12 @@ export function TransactionForm({
         </div>
 
         <div>
-          <label className="text-sm font-medium text-slate-700">
+          <label htmlFor="transaction-type" className="text-sm font-medium text-slate-700">
             {t.common.type}
           </label>
 
           <select
+            id="transaction-type"
             {...typeRegistration}
             onChange={(event) => {
               typeRegistration.onChange(event);
@@ -177,11 +178,13 @@ export function TransactionForm({
         </div>
 
         <div>
-          <label className="text-sm font-medium text-slate-700">
+          <label htmlFor="transaction-accountId" className="text-sm font-medium text-slate-700">
             {t.transactions.account}
           </label>
 
           <select
+            id="transaction-accountId"
+            value={selectedAccount}
             {...register("accountId")}
             className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500"
           >
@@ -189,11 +192,12 @@ export function TransactionForm({
 
             {accounts.map((account) => (
               <option key={account.id} value={account.id}>
-                {account.name}
+                {account.type === 4 ? `${account.name} · ${pt ? "Crédito" : "Credit"}` : account.name}
               </option>
             ))}
           </select>
 
+          <InlineFinancialSetup kind="account" onCreated={(id) => setValue("accountId", id, { shouldValidate: true })} />
           {errors.accountId && (
             <p className="mt-1 text-sm text-rose-600">
               {errors.accountId.message}
@@ -202,11 +206,13 @@ export function TransactionForm({
         </div>
 
         <div>
-          <label className="text-sm font-medium text-slate-700">
+          <label htmlFor="transaction-categoryId" className="text-sm font-medium text-slate-700">
             {t.transactions.category}
           </label>
 
           <select
+            id="transaction-categoryId"
+            value={selectedCategory}
             {...register("categoryId")}
             className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500"
           >
@@ -222,6 +228,8 @@ export function TransactionForm({
             ))}
           </select>
 
+          <InlineFinancialSetup key={selectedType} kind="category" type={selectedType} suggestion={selectedType === 2 ? (pt ? "Outros gastos" : "Other expenses") : (pt ? "Outras receitas" : "Other income")}
+            onCreated={(id) => setValue("categoryId", id, { shouldValidate: true })} />
           {errors.categoryId && (
             <p className="mt-1 text-sm text-rose-600">
               {errors.categoryId.message}

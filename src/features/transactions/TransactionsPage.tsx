@@ -3,7 +3,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
+import { ChevronDown, Plus } from "lucide-react";
 import { useState } from "react";
 import { Alert } from "../../components/ui/Alert";
 import { EmptyState } from "../../components/ui/EmptyState";
@@ -154,8 +154,7 @@ export function TransactionsPage() {
   const isReferenceDataLoading =
     accountsQuery.isLoading || categoriesQuery.isLoading;
 
-  const canCreateTransaction =
-    accounts.length > 0 && categories.length > 0;
+
 
   return (
     <div className="space-y-6">
@@ -173,8 +172,7 @@ export function TransactionsPage() {
         <button
           type="button"
           disabled={
-            isReferenceDataLoading ||
-            !canCreateTransaction
+            isReferenceDataLoading || accountsQuery.isError || categoriesQuery.isError
           }
           onClick={() => {
             setEditingTransaction(null);
@@ -187,31 +185,8 @@ export function TransactionsPage() {
         </button>
       </header>
 
-      {!accountsQuery.isLoading &&
-        accounts.length === 0 && (
-          <Alert variant="warning">
-            {t.transactions.needsAccount}
-          </Alert>
-        )}
-
-      {!categoriesQuery.isLoading &&
-        categories.length === 0 && (
-          <Alert variant="warning">
-            {t.transactions.needsCategory}
-          </Alert>
-        )}
-
-      <TransactionFilters
-        filters={filters}
-        categories={categories}
-        onChange={(nextFilters) => {
-          setFilters(nextFilters);
-          setPage(1);
-        }}
-      />
-
-      {isFormOpen && canCreateTransaction && (
-        <section className="rounded-lg border border-slate-200 bg-white p-5">
+      {isFormOpen && (
+        <section className="rounded-lg border border-slate-200 bg-white p-4 sm:p-5">
           <h2 className="mb-4 text-base font-semibold text-slate-950">
             {t.transactions.createTransaction}
           </h2>
@@ -239,7 +214,7 @@ export function TransactionsPage() {
       )}
 
       {editingTransaction && (
-        <section className="rounded-lg border border-slate-200 bg-white p-5">
+        <section className="rounded-lg border border-slate-200 bg-white p-4 sm:p-5">
           <h2 className="mb-4 text-base font-semibold text-slate-950">
             {t.transactions.editTransaction}
           </h2>
@@ -274,6 +249,23 @@ export function TransactionsPage() {
           />
         </section>
       )}
+
+      <details className="group min-w-0 rounded-lg border border-slate-200 bg-white">
+        <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-2 px-4 text-sm font-medium text-slate-950 [&::-webkit-details-marker]:hidden">
+          {t.transactions.filters}
+          <ChevronDown aria-hidden="true" className="size-4 shrink-0 group-open:rotate-180" />
+        </summary>
+        <div className="min-w-0 border-t border-slate-200">
+          <TransactionFilters
+            filters={filters}
+            categories={categories}
+            onChange={(nextFilters) => {
+              setFilters(nextFilters);
+              setPage(1);
+            }}
+          />
+        </div>
+      </details>
 
       {transactionsQuery.isLoading && (
         <p className="text-sm text-slate-500">

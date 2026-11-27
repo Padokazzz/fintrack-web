@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { AuthShell } from "../../components/ui/AuthShell";
@@ -17,32 +17,50 @@ export function PasswordRecoveryPage() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
 
+  const [resendAt, setResendAt] = useState(0);
+  const [mayResend, setMayResend] = useState(false);
+
+  useEffect(() => {
+    if (!resendAt) return;
+    const timer = window.setTimeout(() => setMayResend(true), Math.max(0, resendAt - Date.now()));
+    return () => window.clearTimeout(timer);
+  }, [resendAt]);
+
+  async function requestCode() {
+    setError("");
+    setPending(true);
+    try {
+      const { data } = await authApi.post<EmailChallenge>("/auth/forgot-password", { email: email.trim() });
+      setChallengeId(data.challengeId);
+      setMayResend(false);
+      setResendAt(Date.now() + 60_000);
+    } catch {
+      setError(pt ? "Não foi possível pedir o código. Aguarde e tente novamente." : "Could not request the code. Wait and try again.");
+    } finally {
+      setPending(false);
+    }
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!challengeId) return requestCode();
     const form = new FormData(event.currentTarget);
     setError("");
     const password = form.get("password");
     const confirmPassword = form.get("confirmPassword");
-    if (challengeId && password !== confirmPassword) {
+    if (password !== confirmPassword) {
       setError(t.validation.passwordMismatch);
       return;
     }
 
     setPending(true);
     try {
-      if (!challengeId) {
-        const { data } = await authApi.post<EmailChallenge>("/auth/forgot-password", { email: email.trim() });
-        setChallengeId(data.challengeId);
-      } else {
-        await authApi.post("/auth/reset-password", { challengeId, code: form.get("code"), password, confirmPassword });
-        invalidateSession();
-        queryClient.clear();
-        navigate("/login", { replace: true, state: { passwordReset: true } });
-      }
+      await authApi.post("/auth/reset-password", { challengeId, code: form.get("code"), password, confirmPassword });
+      invalidateSession();
+      queryClient.clear();
+      navigate("/login", { replace: true, state: { passwordReset: true } });
     } catch {
-      setError(challengeId
-        ? (pt ? "Não foi possível redefinir a senha. Confira o código ou solicite outro." : "Could not reset your password. Check the code or request another.")
-        : (pt ? "Não foi possível enviar o pedido. Aguarde e tente novamente." : "Could not submit the request. Wait and try again."));
+      setError(pt ? "Não foi possível redefinir a senha. Confira o código ou solicite outro." : "Could not reset your password. Check the code or request another.");
     } finally {
       setPending(false);
     }
@@ -59,7 +77,7 @@ export function PasswordRecoveryPage() {
           <>
             <label className="grid gap-1 text-sm">
               {pt ? "Código de 6 dígitos" : "Six-digit code"}
-              <input className={field} name="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} required />
+              <input key={challengeId} className={field} name="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} required />
             </label>
             <label className="grid gap-1 text-sm">
               {pt ? "Nova senha" : "New password"}
@@ -81,8 +99,16 @@ export function PasswordRecoveryPage() {
         <button type="submit" disabled={pending} className="w-full rounded-md bg-emerald-700 px-3 py-2 text-white disabled:opacity-50">
           {challengeId ? (pt ? "Redefinir senha" : "Reset password") : (pt ? "Enviar código" : "Send code")}
         </button>
-        {challengeId && <button type="button" disabled={pending} onClick={() => { setError(""); setChallengeId(undefined); }}
-          className="text-sm text-emerald-700 underline">{pt ? "Solicitar outro código" : "Request another code"}</button>}
+        {challengeId && <div className="space-y-1">
+          <p className="break-all text-sm text-slate-700">{email.trim()}</p>
+          <div className="flex flex-wrap gap-4">
+            <button type="button" disabled={pending || !mayResend} onClick={() => void requestCode()}
+              className="min-h-11 text-sm text-emerald-700 underline disabled:text-slate-500">{pt ? "Reenviar código" : "Resend code"}</button>
+            <button type="button" disabled={pending} onClick={() => { setError(""); setChallengeId(undefined); }}
+              className="min-h-11 text-sm text-emerald-700 underline">{pt ? "Corrigir e-mail" : "Edit email"}</button>
+          </div>
+          {!mayResend && <p role="status" className="text-sm text-slate-600">{pt ? "Aguarde um minuto para reenviar." : "Wait one minute before requesting another code."}</p>}
+        </div>}
       </form>
       <Link to="/login" className="mt-4 inline-block text-sm text-emerald-700 underline">
         {pt ? "Voltar ao login" : "Back to sign in"}

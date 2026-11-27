@@ -1,3 +1,4 @@
+import { ChevronDown } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert } from "../../../components/ui/Alert";
@@ -105,40 +106,11 @@ export function SpendingInsights() {
   );
 
   return (
-    <section className="grid gap-4 lg:grid-cols-2">
-      <div className="space-y-3 rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="text-lg font-semibold">{copy.title}</h2>
-        <label className="grid gap-1 text-sm font-medium">
-          {copy.history}
-          <select className="rounded-lg border border-slate-300 px-3 py-2" value={week.start}
-            onChange={(event) => setSelectedWeek(event.target.value)}>
-            {data.weeks.map((item) => <option key={item.start} value={item.start}>{period(item.start, item.end)}</option>)}
-          </select>
-        </label>
-        <p className="text-2xl font-semibold">{money(week.total)}</p>
-        <p className="text-sm text-slate-600">{copy.previous} · {money(week.previousTotal)}</p>
-        {week.count === 0 ? <p className="text-sm text-slate-600">{copy.empty}</p> : (
-          <>
-            <p className="text-sm">{copy.purchases} · {week.count}</p>
-            {week.smallCount > 0 && <p className="text-sm">
-              {copy.small} {money(data.smallPurchaseLimit)} · {week.smallCount} · {money(week.smallTotal)}
-            </p>}
-            <h3 className="text-sm font-semibold">{copy.byCategory}</h3>
-            <ul className="divide-y divide-slate-100 text-sm">
-              {week.categories.map((item) => (
-                <li key={item.categoryId} className="py-2">
-                  <div className="flex justify-between gap-3"><span>{item.category} ({item.count})</span><strong>{money(item.amount)}</strong></div>
-                  <p className="text-xs text-slate-600">{copy.previous} · {money(item.previousAmount)}</p>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </div>
-      <div className="space-y-3 rounded-xl border border-slate-200 bg-white p-5">
+    <section className="grid min-w-0 gap-3">
+      <div className="min-w-0 space-y-3 rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h2 className="text-lg font-semibold">{copy.budgets}</h2>
+            <h2 className="font-semibold">{copy.budgets}</h2>
             <p className="text-sm text-slate-600">{date(data.month, { month: "long", year: "numeric" })}</p>
           </div>
           {!editing && <button type="button" className="rounded-lg border px-3 py-2 text-sm font-medium"
@@ -172,6 +144,9 @@ export function SpendingInsights() {
                     </div>
                     <progress aria-label={budget.category ?? copy.general} max={budget.limit}
                       value={Math.min(budget.amount, budget.limit)} className="h-2 w-full" />
+                    {budget.amount < budget.limit && <p className="text-slate-600">
+                      {locale.startsWith("pt") ? `Restam ${money(budget.limit - budget.amount)} neste mês.` : `${money(budget.limit - budget.amount)} left this month.`}
+                    </p>}
                     {budget.status === "near" && <p className="text-amber-800">{copy.near}</p>}
                     {budget.status === "reached" && <p className="text-red-800">
                       {budget.amount > budget.limit ? `${copy.exceeded} · ${money(budget.amount - budget.limit)}` : copy.reached}
@@ -183,6 +158,40 @@ export function SpendingInsights() {
           </>
         )}
       </div>
+      <details className="group min-w-0 rounded-xl border border-slate-200 bg-white">
+        <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-2 px-4 text-sm font-semibold text-slate-950 [&::-webkit-details-marker]:hidden">
+          {copy.title}
+          <ChevronDown aria-hidden="true" className="size-4 shrink-0 group-open:rotate-180" />
+        </summary>
+        <div className="min-w-0 space-y-3 border-t border-slate-200 p-4">
+          <label className="grid gap-1 text-sm font-medium">
+            {copy.history}
+            <select className="rounded-lg border border-slate-300 px-3 py-2" value={week.start}
+              onChange={(event) => setSelectedWeek(event.target.value)}>
+              {data.weeks.map((item) => <option key={item.start} value={item.start}>{period(item.start, item.end)}</option>)}
+            </select>
+          </label>
+          <p className="text-2xl font-semibold">{money(week.total)}</p>
+          <p className="text-sm text-slate-600">{copy.previous} · {money(week.previousTotal)}</p>
+          {week.count === 0 ? <p className="text-sm text-slate-600">{copy.empty}</p> : (
+            <>
+              <p className="text-sm">{copy.purchases} · {week.count}</p>
+              {week.smallCount > 0 && <p className="text-sm">
+                {copy.small} {money(data.smallPurchaseLimit)} · {week.smallCount} · {money(week.smallTotal)}
+              </p>}
+              <h3 className="text-sm font-semibold">{copy.byCategory}</h3>
+              <ul className="divide-y divide-slate-100 text-sm">
+                {week.categories.map((item) => (
+                  <li key={item.categoryId} className="py-2">
+                    <div className="flex justify-between gap-3"><span>{item.category} ({item.count})</span><strong>{money(item.amount)}</strong></div>
+                    <p className="text-xs text-slate-600">{copy.previous} · {money(item.previousAmount)}</p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
+      </details>
     </section>
   );
 }

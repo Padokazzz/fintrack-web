@@ -1,34 +1,48 @@
+import { ChevronDown } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Alert } from "../../components/ui/Alert";
 import { getApiErrorMessage } from "../../lib/api-error";
 import { formatCurrency } from "../../lib/formatters";
 import { useLanguage } from "../../lib/i18n/useLanguage";
 import { getAccounts } from "../accounts/accounts-service";
 import { getCategories } from "../categories/categories-service";
+import { AmortizationPanel } from "./AmortizationPanel";
+import { OccurrenceConfirmation } from "./OccurrenceConfirmation";
+import { RecurrenceEditor } from "./RecurrenceEditor";
+import { refreshRecurrenceData } from "./recurrence-cache";
 import { RecurrenceForm } from "./RecurrenceForm";
 import {
-  confirmOccurrence, createRule, deleteRule, formatScheduledDate, getAgenda,
-  getRules, setRulePaused, type Rule, type Scheduled,
+  createRule, deleteRule, formatScheduledDate, getAgenda,
+  getRules, paymentMethods, setRulePaused, type Rule,
 } from "./recurrences-service";
 
 const actionClass = "rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium disabled:opacity-50";
 
 export function RecurrencesPage() {
-  const { t, currency, locale } = useLanguage();
+  const { t, currency, locale, language } = useLanguage();
   const labels = t.recurrences;
   const queryClient = useQueryClient();
-  const [showForm, setShowForm] = useState(false);
+  const pt = language === "pt-BR";
+  const [params, setParams] = useSearchParams();
+  const [editing, setEditing] = useState<string>();
+  const [amortizing, setAmortizing] = useState<string>();
+  const showForm = params.get("new") === "1";
+  function setShowForm(open: boolean) {
+    setParams((current) => {
+      const next = new URLSearchParams(current);
+      if (open) next.set("new", "1");
+      else next.delete("new");
+      return next;
+    }, { replace: true });
+  }
   const rules = useQuery({ queryKey: ["recurrences"], queryFn: getRules, refetchInterval: 15000 });
   const agenda = useQuery({ queryKey: ["recurrence-agenda"], queryFn: getAgenda, refetchInterval: 15000 });
   const accounts = useQuery({ queryKey: ["accounts"], queryFn: getAccounts });
   const categories = useQuery({ queryKey: ["categories"], queryFn: getCategories });
 
-  async function refresh() {
-    await Promise.all([
-      "recurrences", "recurrence-agenda", "accounts", "transactions", "spending-insights", "monthly-summary", "overall-balance", "category-totals",
-    ].map((key) => queryClient.invalidateQueries({ queryKey: [key] })));
-  }
+  const refresh = () => refreshRecurrenceData(queryClient);
 
   const creation = useMutation({
     mutationFn: createRule,
@@ -42,18 +56,13 @@ export function RecurrencesPage() {
     onSuccess: refresh,
   });
   const removal = useMutation({ mutationFn: deleteRule, onSuccess: refresh });
-  const confirmation = useMutation({
-    mutationFn: ({ item, amount }: { item: Scheduled; amount: number | null }) => confirmOccurrence(item, amount),
-    onSuccess: refresh,
-  });
-  const pending = toggle.isPending || removal.isPending || confirmation.isPending;
-  const operationError = creation.error ?? toggle.error ?? removal.error ?? confirmation.error;
+  const pending = toggle.isPending || removal.isPending;
+  const operationError = creation.error ?? toggle.error ?? removal.error;
   const accountNames = new Map(agenda.data?.accounts.map((account) => [account.id, account.name]));
 
-  function submitConfirmation(event: FormEvent<HTMLFormElement>, item: Scheduled) {
-    event.preventDefault();
-    const amount = String(new FormData(event.currentTarget).get("amount"));
-    confirmation.mutate({ item, amount: amount === "" ? null : Number(amount) });
+  function paymentLabel(method: Rule["paymentMethod"]) {
+    const payment = paymentMethods.find(({ id }) => id === method);
+    return payment ? ` · ${pt ? payment.pt : payment.en}` : "";
   }
 
   return (
@@ -68,6 +77,7 @@ export function RecurrencesPage() {
         </button>
       </header>
 
+      {creation.isSuccess && <Alert variant="success">{pt ? "Agendamento salvo." : "Schedule saved."}</Alert>}
       {(agenda.isError || rules.isError || accounts.isError || categories.isError) &&
         <Alert variant="error">{labels.loadError}</Alert>}
       {operationError && <Alert variant="error">{getApiErrorMessage(operationError, labels.saveError)}</Alert>}
@@ -75,29 +85,8 @@ export function RecurrencesPage() {
 
       {showForm && agenda.data && (
         <section className="space-y-3 rounded-lg border border-slate-200 bg-white p-4">
-          {!accounts.isPending && !categories.isPending && (!accounts.data?.length || !categories.data?.length) &&
-            <Alert variant="warning">{labels.needsSetup}</Alert>}
           <RecurrenceForm accounts={accounts.data ?? []} categories={categories.data ?? []}
             today={agenda.data.today} pending={creation.isPending} onCreate={creation.mutate} />
-        </section>
-      )}
-
-      {agenda.data && (
-        <section className="space-y-3">
-          <div>
-            <h2 className="font-semibold text-slate-950">{labels.projection}</h2>
-            <p className="text-sm text-slate-500">{labels.projectionHint(formatScheduledDate(agenda.data.through, locale))}</p>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {agenda.data.accounts.map((account) => (
-              <article key={account.id} className="rounded-lg border border-slate-200 bg-white p-4">
-                <p className="text-sm font-medium">{account.name}</p>
-                <p className="mt-1 text-xl font-semibold">{formatCurrency(account.projectedBalance, locale, currency)}</p>
-                <p className="text-sm text-slate-500">{labels.current} {formatCurrency(account.currentBalance, locale, currency)}</p>
-                {account.hasUnknownAmounts && <p className="mt-1 text-xs text-amber-700">{labels.incomplete}</p>}
-              </article>
-            ))}
-          </div>
         </section>
       )}
 
@@ -109,18 +98,11 @@ export function RecurrencesPage() {
             <div>
               <p className="font-medium">{item.description}</p>
               <p className="text-sm text-slate-500">
-                {formatScheduledDate(item.date, locale)} · {accountNames.get(item.accountId)} · {item.pending ? labels.pending : item.automatic ? labels.automatic : labels.manual}
+                {formatScheduledDate(item.date, locale)} · {accountNames.get(item.accountId)}{paymentLabel(item.paymentMethod)} · {item.pending ? labels.pending : item.automatic ? labels.automatic : labels.manual}
               </p>
             </div>
             {item.pending ? (
-              <form className="flex flex-wrap items-end gap-2" onSubmit={(event) => submitConfirmation(event, item)}>
-                <label className="space-y-1 text-xs">
-                  <span>{labels.actualAmount}</span>
-                  <input name="amount" type="number" min="0.01" step="0.01" required defaultValue={item.amount ?? undefined}
-                    className="block w-28 rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm" />
-                </label>
-                <button type="submit" className={actionClass} disabled={pending}>{labels.confirm}</button>
-              </form>
+              <OccurrenceConfirmation item={item} />
             ) : (
               <p className="text-sm font-medium">{item.amount === null
                 ? labels.unknownAmount
@@ -130,27 +112,61 @@ export function RecurrencesPage() {
         ))}
       </section>
 
+      {agenda.data && (
+        <details className="group min-w-0 rounded-lg border border-slate-200 bg-white">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-2 px-4 text-sm font-semibold [&::-webkit-details-marker]:hidden">
+            {labels.projection}
+            <ChevronDown aria-hidden="true" className="size-4 shrink-0 group-open:rotate-180" />
+          </summary>
+          <div className="space-y-3 border-t border-slate-200 p-3">
+            <p className="text-sm text-slate-500">{labels.projectionHint(formatScheduledDate(agenda.data.through, locale))}</p>
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {agenda.data.accounts.map((account) => (
+                <article key={account.id} className="rounded-lg border border-slate-200 bg-white p-4">
+                  <p className="text-sm font-medium">{account.name}</p>
+                  <p className="mt-1 text-xl font-semibold">{formatCurrency(account.projectedBalance, locale, currency)}</p>
+                  <p className="text-sm text-slate-500">{labels.current} {formatCurrency(account.currentBalance, locale, currency)}</p>
+                  {account.hasUnknownAmounts && <p className="mt-1 text-xs text-amber-700">{labels.incomplete}</p>}
+              </article>
+              ))}
+            </div>
+          </div>
+        </details>
+      )}
+
       <section className="space-y-3">
         <h2 className="font-semibold text-slate-950">{labels.rules}</h2>
         {rules.data?.length === 0 && <p className="text-sm text-slate-500">{labels.emptyRules}</p>}
-        {rules.data?.map((rule) => (
-          <article key={rule.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white p-4">
-            <div>
-              <p className="font-medium">{rule.description}</p>
-              <p className="text-sm text-slate-500">
-                {accountNames.get(rule.accountId)} · {rule.automatic ? labels.automatic : labels.manual} · {rule.paused ? labels.paused : labels.nextRun(formatScheduledDate(rule.nextDate, locale))}
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <button type="button" className={actionClass} disabled={pending} onClick={() => toggle.mutate(rule)}>
-                {rule.paused ? labels.resume : labels.pause}
-              </button>
-              <button type="button" className={actionClass} disabled={pending} onClick={() => {
-                if (window.confirm(labels.confirmDelete)) removal.mutate(rule.id);
-              }}>{labels.remove}</button>
-            </div>
-          </article>
-        ))}
+        {rules.data?.map((rule) => {
+          const ended = Boolean(rule.endsOn && rule.nextDate > rule.endsOn);
+          return (
+            <article key={rule.id} className="space-y-3 rounded-lg border border-slate-200 bg-white p-4">
+              <div>
+                <p className="font-medium">{rule.description}</p>
+                <p className="text-sm text-slate-500">
+                  {accountNames.get(rule.accountId)}{paymentLabel(rule.paymentMethod)} · {rule.automatic ? labels.automatic : labels.manual} · {ended ? (pt ? "Encerrado" : "Ended") : rule.paused ? labels.paused : labels.nextRun(formatScheduledDate(rule.nextDate, locale))}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {!ended && <button type="button" className={actionClass} onClick={() => setEditing(editing === rule.id ? undefined : rule.id)}>
+                  {pt ? "Editar próximos" : "Edit future entries"}
+                </button>}
+                {rule.type === 2 && <button type="button" className={actionClass} aria-expanded={amortizing === rule.id}
+                  onClick={() => setAmortizing(amortizing === rule.id ? undefined : rule.id)}>
+                  {pt ? "Amortizações" : "Extra payments"}
+                </button>}
+                {!ended && <button type="button" className={actionClass} disabled={pending} onClick={() => toggle.mutate(rule)}>
+                  {rule.paused ? labels.resume : labels.pause}
+                </button>}
+                <button type="button" className={actionClass} disabled={pending} onClick={() => {
+                  if (window.confirm(labels.confirmDelete)) removal.mutate(rule.id);
+                }}>{labels.remove}</button>
+              </div>
+              {editing === rule.id && agenda.data && <RecurrenceEditor id={rule.id} today={agenda.data.today} onClose={() => setEditing(undefined)} />}
+              {amortizing === rule.id && agenda.data && <AmortizationPanel rule={rule} today={agenda.data.today} />}
+            </article>
+          );
+        })}
       </section>
     </div>
   );
