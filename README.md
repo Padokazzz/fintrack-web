@@ -1,25 +1,28 @@
 # FinTrack Web
 
-Frontend de uma aplicação de gestão financeira pessoal, desenvolvido com **React e TypeScript**. A interface consome a [FinTrack API](https://github.com/Padokazzz/FinTrack), permitindo que usuários organizem contas, categorias e transações e acompanhem um resumo financeiro mensal.
+Organize contas, cartões e despesas recorrentes, registre gastos e acompanhe seus limites no mesmo lugar. A versão web funciona no navegador e pode ser adicionada à tela inicial do celular.
 
-O objetivo do projeto é construir uma experiência de uso completa em torno de uma API própria, com componentes reutilizáveis, formulários validados, gerenciamento de estado remoto e tratamento consistente dos estados da interface.
+[Abrir o FinTrack](https://fintrack.thecodefy.com/) · [Criar conta](https://fintrack.thecodefy.com/register) · [Recuperar senha](https://fintrack.thecodefy.com/forgot-password) · [Aviso de privacidade](https://fintrack.thecodefy.com/privacy) · [Repositório da API](https://github.com/Padokazzz/FinTrack)
 
-![Prévia do dashboard FinTrack](docs/images/dashboard-preview.png)
+## Interface
+
+Capturas da versão atual com dados de demonstração.
+
+![Visão geral do FinTrack em desktop, com saldo, próximos lançamentos e limites](docs/images/dashboard-preview.png)
+
+| Login no celular | Contas e cartões no celular |
+| --- | --- |
+| <img src="docs/images/login-preview.png" alt="Tela de login com acesso à recuperação de senha" width="260"> | <img src="docs/images/mobile-accounts.png" alt="Conta bancária com cartão vinculado e limites usado e disponível" width="260"> |
 
 ## Funcionalidades
 
-- Cadastro e login com autenticação JWT.
-- Dashboard com resumo financeiro mensal.
-- Gerenciamento de contas e categorias.
-- Criação, edição, consulta e remoção de transações.
-- Criação, consulta e reversão de transferências entre contas.
-- Filtros por mês, ano, tipo e categoria.
-- Históricos de transações e transferências paginados pela API.
-- Agenda de recorrências mensais e projeção de saldo por conta.
-- Detalhamento de despesas e receitas por categoria, com exportação mensal em CSV.
-- Formulários com validação.
-- Estados de carregamento, erro e ausência de dados.
-- Área autenticada com navegação lateral.
+- **Visão geral e lançamento rápido.** O painel reúne saldo, receitas, despesas, próximos pagamentos e limites mensais. Crie conta ou categoria no próprio formulário do primeiro gasto.
+- **Contas e cartões.** Vincule um cartão ao banco, consulte limite usado e disponível e registre o pagamento pela conta vinculada. O pagamento entra como transferência, sem duplicar a despesa.
+- **Contas fixas e salário.** Agende energia, água, internet, streaming, aluguel, salário, empréstimo ou financiamento. Escolha a forma de pagamento, a conta e uma data final opcional. Confirme parcelas pendentes no painel e edite as próximas sem alterar o histórico já gerado.
+- **Amortizações.** Registre o valor pago, as parcelas finais abatidas ou ambos. Informe o total restante antes e depois para calcular a economia estimada por amortização e o acumulado da dívida.
+- **Acompanhamento de gastos.** Defina limites gerais e por categoria, compare semanas e consulte relatórios mensais com exportação CSV.
+- **Acesso e privacidade.** Confirme o e-mail, recupere a senha por código e acesse **Meus dados** para exportar ou excluir o cadastro.
+- **Interface responsiva.** A navegação inferior dá acesso aos fluxos principais no celular. Tema, idioma e instalação ficam nas preferências.
 
 ## Stack
 
@@ -51,6 +54,8 @@ src/
 │   ├── accounts/
 │   ├── auth/
 │   ├── categories/
+│   ├── privacy/
+│   ├── recurrences/
 │   ├── summaries/
 │   ├── transactions/
 │   └── transfers/
@@ -99,7 +104,7 @@ cd fintrack-web
 Instale as dependências e configure o ambiente:
 
 ```bash
-npm install
+npm ci
 cp .env.example .env
 ```
 
@@ -138,13 +143,11 @@ npm test
 npm run build
 ```
 
-## Fluxo principal
+## Primeiros lançamentos
 
-1. O usuário cria uma conta ou realiza login.
-2. A aplicação utiliza o token JWT nas chamadas autenticadas.
-3. O usuário cadastra contas financeiras e categorias.
-4. As transações são registradas e associadas aos recursos correspondentes.
-5. O dashboard consulta os dados e apresenta o resumo do período.
+1. Entre na sua conta e selecione **Registrar gasto** na visão geral.
+2. Informe o valor, escolha a conta ou cartão e selecione a categoria. Se necessário, crie a conta ou categoria ali mesmo.
+3. Em **Limites mensais**, defina quanto deseja gastar no total ou por categoria.
 
 ## Executar com Docker
 
@@ -157,34 +160,17 @@ docker run --rm -p 3000:80 fintrack-web
 
 A imagem usa Nginx para servir as rotas do React e encaminhar `/api` para `http://host.docker.internal:8080`. Use `-e FINTRACK_API_UPSTREAM=http://outro-host:8080` para ajustar o destino. Em Docker Engine no Linux, acrescente `--add-host=host.docker.internal:host-gateway` se usar o destino padrão.
 
-## Recorrências
+## Contas fixas e amortizações
 
-Em **Recorrências**, selecione **Nova recorrência**, vincule uma conta e uma categoria e informe a primeira data. Para salário ou débito fixo, escolha **Registrar automaticamente** e informe o valor. Para contas variáveis, escolha **Confirmar manualmente** e preencha o valor real quando a ocorrência aparecer na agenda.
+Em **Contas fixas e salário → Novo agendamento**, escolha um modelo, informe a primeira data e selecione a conta ou o cartão. A **forma de pagamento** indica como o dinheiro sai. A opção **Como registrar?** define se o FinTrack lança o valor na data ou espera sua confirmação. Para débito automático, escolha uma conta bancária. O pagamento em si é feito pelo banco ou pelo meio escolhido.
 
-O dashboard mostra os próximos lançamentos. A agenda mostra os saldos projetados até 30 dias e sinaliza contas com valores a definir. Você pode pausar, retomar ou excluir regras pela mesma tela.
+Para uma dívida parcelada, informe a data da última parcela. Em **Amortizações**, você pode abater parcelas finais e salvar os dados do cálculo de economia. Se já quitou a dívida, informe zero como total restante depois. A saída de dinheiro fica em **Lançamentos**.
 
 ## Tratamento de estados e validações
 
 Os formulários utilizam Zod integrado ao React Hook Form para validar os dados antes do envio. A interface também contempla estados de carregamento, listas vazias e falhas nas operações.
 
 Quando um JWT expira, o frontend tenta renovar a sessão por cookie HttpOnly e repetir a requisição uma vez. Se a renovação for recusada, o usuário volta ao login.
-
-## Próximas melhorias
-
-- [x] Adicionar testes de componentes.
-- [x] Criar testes de integração para fluxos com a API.
-- [x] Aplicar carregamento sob demanda nas rotas.
-- [x] Evoluir a experiência em dispositivos móveis.
-- [x] Ampliar os gráficos e filtros do dashboard.
-- [x] Preparar imagem Docker para o frontend.
-
-## Projeto relacionado
-
-- [FinTrack API](https://github.com/Padokazzz/FinTrack): backend em ASP.NET Core e PostgreSQL.
-
----
-
-Desenvolvido por [Leonardo Padilha](https://www.leonardopadilha.com).
 
 ## Desktop macOS com Tauri
 
@@ -248,7 +234,7 @@ provisionamento da Apple no Xcode.
 
 ## Instalar pelo navegador
 
-Com o FinTrack publicado em HTTPS, é possível instalar o site pela opção **Instalar FinTrack** ou pelo menu do navegador.
+Abra a [versão publicada](https://fintrack.thecodefy.com/). Use **Preferências → Instalar FinTrack** quando a opção estiver disponível, ou instale pelo próprio navegador.
 
 - Android com Chrome: abra o menu e selecione **Instalar app** ou **Adicionar à tela inicial**.
 - iPhone e iPad com Safari: abra **Compartilhar**, selecione **Adicionar à Tela de Início** e confirme. Ative **Abrir como App da Web** se essa opção aparecer.
@@ -265,7 +251,7 @@ servidor ou ingresso.
 
 ### Privacidade
 
-O aviso público fica em `/privacy`. **Meus dados** fica no menu após o login
+O [aviso de privacidade](https://fintrack.thecodefy.com/privacy) é público. **Meus dados** fica no menu após o login
 e exige a senha atual para exportar ou excluir o cadastro.
 
 Antes de disponibilizar o FinTrack a pessoas com dados reais, configure
@@ -276,3 +262,7 @@ os fornecedores e compartilhamentos efetivos e os prazos de retenção.
 Teste o canal para identificação e atendimento de pedidos de correção,
 acesso e exclusão. Defina também o tratamento de cópias de segurança e logs
 com os provedores escolhidos para o piloto.
+
+---
+
+Desenvolvido por [Leonardo Padilha](https://www.leonardopadilha.com).
