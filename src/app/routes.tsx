@@ -1,3 +1,4 @@
+import { PasswordRecoveryPage } from "../features/auth/PasswordRecoveryPage";
 import { MyDataPage, PrivacyNoticePage } from "../features/privacy/PrivacyPages";
 import { createBrowserRouter, createHashRouter, Navigate } from "react-router-dom";
 import { isDesktop } from "../lib/platform/desktop";
@@ -22,6 +23,7 @@ export const router = createRouter([
     path: "/",
     element: <Navigate to="/dashboard" replace />,
   },
+  { path: "/forgot-password", element: <PasswordRecoveryPage /> },
   { path: "/privacy", element: <PrivacyNoticePage /> },
   {
     path: "/login",

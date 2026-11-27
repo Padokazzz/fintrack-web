@@ -5,7 +5,11 @@ export function createRegisterSchema(t: TranslationDictionary) {
   return z.object({
     name: z.string().min(2, t.validation.nameMin),
     email: z.email(t.validation.validEmail),
-    password: z.string().min(6, t.validation.passwordMin),
+    password: z.string().min(6, t.validation.passwordMin).max(100),
+    confirmPassword: z.string(),
+  }).refine(({ password, confirmPassword }) => password === confirmPassword, {
+    path: ["confirmPassword"],
+    message: t.validation.passwordMismatch,
   });
 }
 
@@ -21,6 +25,7 @@ export const registerSchema = createRegisterSchema({
     nameMin: "Name must have at least 2 characters",
     validEmail: "Enter a valid email",
     passwordMin: "Password must have at least 6 characters",
+    passwordMismatch: "Passwords must match",
   },
 } as TranslationDictionary);
 

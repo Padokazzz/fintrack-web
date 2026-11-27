@@ -88,6 +88,8 @@ export const translations = {
     },
     auth: {
       signIn: "Sign in",
+      confirmPassword: "Confirm password",
+      forgotPassword: "Forgot your password?",
       signInDescription:
         "Access your financial dashboard, transactions, and monthly reports.",
       createAccount: "Create account",
@@ -129,6 +131,7 @@ export const translations = {
       nameMin: "Name must have at least 2 characters",
       validEmail: "Enter a valid email",
       passwordMin: "Password must have at least 6 characters",
+      passwordMismatch: "Passwords must match",
       passwordRequired: "Password is required",
       initialBalancePositive: "Initial balance cannot be negative",
       nameRequired: "Name is required",
@@ -380,6 +383,8 @@ export const translations = {
     },
     auth: {
       signIn: "Entrar",
+      confirmPassword: "Confirmar senha",
+      forgotPassword: "Esqueceu a senha?",
       signInDescription:
         "Acesse seu dashboard financeiro, transações e relatórios mensais.",
       createAccount: "Criar conta",
@@ -421,6 +426,7 @@ export const translations = {
       nameMin: "O nome deve ter pelo menos 2 caracteres",
       validEmail: "Informe um email válido",
       passwordMin: "A senha deve ter pelo menos 6 caracteres",
+      passwordMismatch: "As senhas precisam ser iguais.",
       passwordRequired: "A senha é obrigatória",
       initialBalancePositive: "O saldo inicial não pode ser negativo",
       nameRequired: "O nome é obrigatório",
