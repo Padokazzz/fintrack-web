@@ -245,3 +245,12 @@ O comando Android acima gera um APK de teste. Para distribuir, configure a
 assinatura Android e gere um AAB com `npm run android:build -- --aab`.
 Para um build iOS em aparelho físico ou distribuição, configure a equipe e o
 provisionamento da Apple no Xcode.
+
+## Instalar pelo navegador
+
+Com o FinTrack publicado em HTTPS, é possível instalar o site pela opção **Instalar FinTrack** ou pelo menu do navegador.
+
+- Android com Chrome: abra o menu e selecione **Instalar app** ou **Adicionar à tela inicial**.
+- iPhone e iPad com Safari: abra **Compartilhar**, selecione **Adicionar à Tela de Início** e confirme. Ative **Abrir como App da Web** se essa opção aparecer.
+
+O ícone abre a versão web do FinTrack. O acesso aos dados continua dependendo de conexão com a API.

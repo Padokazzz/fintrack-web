@@ -1,3 +1,4 @@
+import { InstallWebApp } from "./InstallWebApp";
 import type { ReactNode } from "react";
 import { LanguageSelect } from "../layout/LanguageSelect";
 import { ThemeSelect } from "../layout/ThemeSelect";
@@ -26,6 +27,7 @@ export function AuthShell({ title, description, children }: AuthShellProps) {
         </div>
 
         {children}
+        <InstallWebApp className="mt-4" />
       </section>
     </main>
   );

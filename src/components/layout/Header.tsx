@@ -1,3 +1,4 @@
+import { InstallWebApp } from "../ui/InstallWebApp";
 import { useState } from "react";
 import { LogOut, Menu } from "lucide-react";
 import { useAuth } from "../../features/auth/use-auth";
@@ -65,6 +66,7 @@ export function Header({ onMenuClick, menuOpen }: HeaderProps) {
           <span className="hidden sm:inline">{t.logout}</span>
         </button>
       </div>
+      <InstallWebApp />
       {logoutError && <p role="alert" className="w-full text-sm text-rose-700">{t.logoutError}</p>}
     </header>
   );
